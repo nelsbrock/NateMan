@@ -1,0 +1,88 @@
+{% extends 'base.html.j2' %}
+
+{#
+  NateMan – Nachschreibtermin-Manager
+  templates/fileio/import.html.j2
+  Copyright © 2020  Niklas Elsbrock
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#}
+
+{% block title %}Klausurpläne importieren{% endblock %}
+{% block header %}Klausurpläne importieren{% endblock %}
+
+{% set stufen_list = Stufe.query.all() %}
+
+{% block js_head %}
+  var plan_delete_warn = "Durch das Löschen eines Plans werden alle importierten sowie nachträglich hinzugefügten\n"
+                       + "Daten der Stufe (Klausurtermine, Klausuren, Schüler(innen)) unwiderruflich gelöscht.\n"
+                       + "Lehrerkonten bleiben unberührt.\n\nWollen Sie wirklich fortfahren?";
+
+  var import_warn = "Durch das Importieren von Klausurplänen werden bestehende importierte sowie nachträglich "
+                  + "hinzugefügte\nDaten (Klausurtermine, Klausuren, Schüler(innen)) aller Stufen, für die neue Pläne "
+                  + "importiert wurden, unwiderruflich gelöscht.\nBestehende Lehrerkonten bleiben unberührt.\n\n"
+                  + "Durch das Importieren von Koopschüler(inne)n werden alle bestehenden Koopschüler(innen) "
+                  + "gelöscht.\n\nWollen Sie wirklich fortfahren?";
+{% endblock %}
+
+{% block js_body_end %}
+  document.getElementById("import-button").onclick = function () {
+    if (!confirm(import_warn)) {
+      return false;
+    }
+    this.disabled = true;
+    this.value = 'Bitte warten...';
+    this.form.submit();
+    return true;
+  }
+{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+  <div class="table-aligned">
+    {% for stufe in stufen_list %}
+      <div>
+        <div><label for="plan_{{ stufe.name }}-input">Plan für {{ stufe.name }}:</label></div>
+        <div><input type="file" name="plan_{{ stufe.name }}" id="plan_{{ stufe.name }}-input" accept="text/xml"></div>
+        <div>
+          <input type="submit" name="del_{{ stufe.name }}" value="Plan löschen"
+                 onclick="return confirm(plan_delete_warn)" {% if stufe.import_date is none %}disabled{% endif %}>
+        </div>
+        <div class="detail">
+          {% if stufe.import_date is none %}
+            nicht importiert
+          {% else %}
+            importiert am {{ stufe.import_date.strftime("%d.%m.%Y") }}
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  <p>
+    <label>
+      Koopschüler(innen)liste:
+      <input type="file" name="koopschueler" id="koopschueler-input" accept=".xlsx,.xlsm,.xltx,.xltm">
+    </label>
+  </p>
+  <p>
+    <label>
+      Passwort für neu registrierte Lehrer(innen):
+      <input name="new-lehrer-password" type="text" id="new-lehrer-password-input"
+             value="{{ nateman_config['default-new-lehrer-password'] }}">
+    </label>
+  </p>
+
+  <p><input type="submit" value="Importieren" id="import-button"></p>
+</form>
+{% endblock %}

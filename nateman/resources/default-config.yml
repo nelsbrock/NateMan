@@ -1,0 +1,67 @@
+# Konfiguration der NateMan-Webanwendung.
+
+
+# Name, unter dem der Webserver normalerweise erreicht wird
+server-name: "nateman.example.com"
+
+# Benutzt der Webserver SSL (HTTPS)?
+uses-ssl: No
+
+# Passwort, das standardmäßig als Passwort für neu reistrierte Lehrer verwendet wird
+default-new-lehrer-password: ""
+
+# Format für E-Mail-Adressen neu hinzugefügter Lehrer.
+# Fragezeichen werden durch das jeweilige Kürzel des neuen Lehrers ersetzt.
+# Auskommentieren zum Deaktivieren.
+# Beispiel: email-address-format: "?@example.com"
+#email-address-format: ""
+
+
+schule:
+  # Name der Schule
+  name: "Max-Mustermann-Schule"
+  # URL zur Website der Schule
+  website-url: "https://example.com/"
+  # Optional: URL zum Schullogo.
+  # Optimal ist ein PNG-Bild mit maximal 100 Pixeln Höhe.
+  #logo-url
+  # Url zum Impressum
+  imprint-url: "https://example.com/impressum"
+  # Url zur Datenschutzerklärung
+  privacy-policy-url: "https://example.com/datenschutz"
+
+
+klausuren:
+  # Maximale Zeichenanzahl für Bemerkungen
+  max-annotation-length: 64
+  # Bei der Klausurbearbeitung auswählbare Klausurlängen.
+  # Bestehende Daten werden von einer Änderung nicht beeinflusst.
+  klausurlaengen:
+    - 45
+    - 60
+    - 135
+    - 180
+
+
+# Logging-Einstellungen
+logging:
+  # Logging-Level. Mögliche Werte: NOTSET, DEBUG, INFO, WARNING, ERROR, CRITICAL
+  level: "INFO"
+  # Legt fest, ob Lognachrichten zu syslog (/dev/log) gesendet werden sollen
+  syslog: No
+
+
+# Mailserver-Einstellungen
+mail:
+  # Addresse, von der von NateMan automatisch gesendete E-Mails ausgehen
+  sender-address: "nateman@example.com"
+  # Legt, ob SSL zur Verbindung zum SMTP-Server verwendet werden soll.
+  # Empfohlen, falls der SMTP-Server dies unterstützt.
+  use-ssl: Yes
+
+  # SMTP-Host- und Anmeldedaten
+  smtp:
+    hostname: "smtp.example.com"
+    hostport: 25
+    user: "nateman@example.com"
+    password: ""

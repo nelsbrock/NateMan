@@ -1,0 +1,113 @@
+{% extends 'base.html.j2' %}
+
+{#
+  NateMan – Nachschreibtermin-Manager
+  templates/klausuren/stufe.html.j2
+  Copyright © 2020  Niklas Elsbrock
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#}
+
+{% block title %}Klausuren {{ stufe.name }}{% endblock %}
+{% block header %}Klausuren {{ stufe.name }}{% endblock %}
+
+{# stufe #}
+{# dates_anstehend #}
+{# dates_vergangen #}
+{% set lehrer_can_access = g.lehrer is not none and g.lehrer.can_access(stufe) %}
+{% set klausur_count = dates_anstehend | length + dates_vergangen | length %}
+{% set beratungslehrer_list = Lehrer.query.filter_by(beraet=stufe).all() %}
+
+{% block content %}
+
+<p class="description">
+  Beratungslehrer(innen):
+  {% if beratungslehrer_list|length == 0 %}
+    keine
+  {% else %}
+    {% for l in beratungslehrer_list %}
+      {{ l.kuerzel }}{% if l.email is not none %} &lt;<a href="mailto:{{ l.email }}">{{ l.email }}</a>&gt;{% endif %}<!--
+      -->{% if not loop.last %},{% endif %}
+    {% endfor %}
+  {% endif %}
+</p>
+
+{% if lehrer_can_access %}
+  <p><a href="{{ url_for('klausuren.add', stufe_name=stufe.name) }}" data-icon="&#xf0fe;">Klausur hinzufügen</a></p>
+{% endif %}
+
+{% if klausur_count != 0 %}
+  <p><a href="#heute" data-icon="&#xf103;">zu heute springen</a></p>
+{% endif %}
+
+{% if klausur_count == 0 %}
+  <p>keine</p>
+{% else %}
+  {% for dates_list in (dates_anstehend, dates_vergangen) %}
+    {% if loop.index0 == 1 %}
+      <div id="heute" class="labeled-hr" data-icon="&#xf073;">heute ({{ util.format_date(datetime.now()) }})</div>
+    {% endif %}
+
+    {% for date in dates_list %}
+      {% set date_klausur_list = Klausur.query.filter_by(stufe=stufe, date=date).all() %}
+      {% set date_iso = date.strftime('%Y-%m-%d') %}
+
+      <h3>
+        <span>
+          {{ util.format_date(date) }}:
+          <a class="scroll-anchor" name="{{ date_iso }}" href="#{{ date_iso }}"></a>
+        </span>
+      </h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Lehrer(in)</th>
+            <th>Kurs</th>
+            <th>Zeitraum</th>
+            {% if lehrer_can_access %}
+              <th>bearbeitet</th>
+              <th>Bemerkung</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for k in date_klausur_list %}
+            <tr {% if lehrer_can_access %} class="clickable" tabindex="0"
+                data-href="{{ url_for('klausuren.edit', klausur_id=k.id) }}" {% endif %}>
+              <td>{{ k.lehrer.kuerzel }}</td>
+              <td>{{ k.kursname }}</td>
+              <td>{{ zeitraum(k) }} Std.</td>
+              {% if lehrer_can_access %}
+                {% if k.edited %}
+                  <td class="positive-status">ja</td>
+                {% else %}
+                  <td class="negative-status">nein</td>
+                {% endif %}
+
+                {% if k.annotation is not none %}
+                  <td class="description">{{ k.annotation }}</td>
+                {% else %}
+                  <td class="detail">keine</td>
+                {% endif %}
+              {% endif %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endfor %}
+  {% endfor %}
+{% endif %}
+
+{% endblock %}

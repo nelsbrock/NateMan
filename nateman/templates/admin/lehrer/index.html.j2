@@ -1,0 +1,69 @@
+{% extends 'base.html.j2' %}
+
+{#
+  NateMan – Nachschreibtermin-Manager
+  templates/admin/lehrer/index.html.j2
+  Copyright © 2020  Niklas Elsbrock
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#}
+
+{% block title %}Lehrerkonten{% endblock %}
+{% block header %}Lehrerkonten{% endblock %}
+
+{% set lehrer_list = Lehrer.query.order_by(Lehrer.kuerzel).all() %}
+
+{% block content %}
+<p><a href="{{ url_for('admin.lehrer.add') }}" data-icon="&#xf234;">Lehrer(in) hinzufügen</a></p>
+
+<p>Klicken Sie eine Zeile aus der folgenden Übersicht an, um ein bestehendes Benutzerkonto zu bearbeiten.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Kürzel</th>
+      <th>E-Mail-Adresse</th>
+      <th>Admin</th>
+      <th>Beratungslehrer(in)</th>
+      <th>Passwort<br>gesetzt</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for l in lehrer_list %}
+      <tr class="clickable" tabindex="0" data-href="{{ url_for('admin.lehrer.edit', lehrer_id=l.id) }}">
+        <td>{{ l.kuerzel }}</td>
+        <td>
+          {% if l.email is not none %}
+            {{ l.email }}
+            {% if l.is_confirmed %}
+              <span class="positive-status" title="bestätigt"></span>
+            {% else %}
+              <span class="negative-status" title="nicht bestätigt"></span>
+            {% endif %}
+          {% else %}
+            <span class="detail">(keine)</span>
+          {% endif %}
+        </td>
+        <td>{{ 'ja' if l.is_admin else 'nein' }}</td>
+        <td>{{ l.beraet.name if l.beraet is not none else '<span class="detail">(keine Stufe)</span>' }}</td>
+        {% if l.pwd_changed %}
+          <td class="positive-status">ja</td>
+        {% else %}
+          <td class="negative-status">nein</td>
+        {% endif %}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

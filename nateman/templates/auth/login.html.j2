@@ -1,0 +1,48 @@
+{% extends 'base.html.j2' %}
+
+{#
+  NateMan – Nachschreibtermin-Manager
+  templates/auth/login.html.j2
+  Copyright © 2020  Niklas Elsbrock
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#}
+
+{% block title %}Anmelden{% endblock %}
+{% block header %}Anmelden{% endblock %}
+
+{% block content %}
+<form method="post">
+
+  <div class="table-aligned">
+    <div>
+      <div><label for="kuerzel-input">Lehrerkürzel:</label></div>
+      <div><input type="text" name="kuerzel" id="kuerzel-input" autocomplete="username" required autofocus></div>
+    </div>
+    <div>
+      <div><label for="password-input">Passwort:</label></div>
+      <div><input type="password" name="password" id="password-input" autocomplete="current-password" required></div>
+    </div>
+    <div>
+      <div><label for="remember-me-cb">Angemeldet bleiben:</label></div>
+      <div><input type="checkbox" name="remember-me" id="remember-me-cb"></div>
+    </div>
+  </div>
+
+  <p>
+    <input type="submit" value="Anmelden">
+    <a href="{{ url_for('auth.password_reset') }}">Passwort vergessen</a>
+  </p>
+</form>
+{% endblock %}

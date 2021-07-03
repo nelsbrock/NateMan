@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+
+{# von Niklas Elsbrock #}
+
+
+{% macro zeitraum(klausur) -%}
+  {{- klausur.startperiod }}.
+  {%- if klausur.startperiod != klausur.endperiod -%}
+    &ndash;{{ klausur.endperiod }}.
+  {%- endif %}
+{%- endmacro %}
+
+
+<!-- generiert aus Template-Code von Niklas Elsbrock -->
+
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}{% endblock %} &ndash; NateMan</title>
+
+  <link rel="icon" type="image/png" sizes="192x192"
+        href="{{ url_for('static', filename='img/logo.png') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/icon-apple.png') }}">
+
+  <!--[if !IE]><!-->
+  <link  rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <!--<![endif]-->
+  <script>
+    window.onload = function() {
+      {% for message in get_flashed_messages(with_categories=True, category_filter='alert') %}
+        alert({{ message[1] | tojson }});
+      {% endfor %}
+
+      {% block js_window_onload %}{% endblock %}
+    };
+
+    {% block js_head %}{% endblock %}
+  </script>
+  {% block head %}{% endblock %}
+</head>
+
+
+<body>
+  <header>
+    <a id="nateman-logo-container" href="{{ url_for('klausuren.mine' if g.lehrer is not none else 'index.index') }}">
+      <img id="nateman-logo" alt="NateMan Logo"
+           src="{{ url_for('static', filename='img/logo.png') }}" draggable="false">
+    </a>
+    <h1 class="header-text">NateMan<span class="optional">&nbsp;&ndash;&nbsp;Nachschreibtermin-Manager</span></h1>
+  </header>
+
+  <!--[if IE]>
+    <p style="color: #ff0000; font-size: 25px;">
+      Diese Seite wird im Internet Explorer nicht richtig angezeigt.<br>
+      Um sie richtig angezeigt zu bekommen, benutzen Sie einen anderen Browser.
+    </p>
+  <![endif]-->
+
+  <nav>
+    {% if g.lehrer is not none %}
+      <a href="{{ url_for('auth.logout') }}" data-icon="&#xf2f5;">
+        <span>
+          Angemeldet als <b>{{ g.lehrer.kuerzel }}</b><br>
+          <b>Abmelden</b>
+        </span>
+      </a>
+    {% else %}
+      <a href="{{ url_for('auth.login') }}" data-icon="&#xf2f6;">
+        <span>Anmelden</span>
+      </a>
+
+      <a href="{{ url_for('auth.password_reset') }}" data-icon="&#xf1cd;">
+        <span>Passwort vergessen</span>
+      </a>
+    {% endif %}
+
+    <hr>
+    {% if g.lehrer is not none and g.lehrer.pwd_changed %}
+      <a href="{{ url_for('klausuren.mine') }}" data-icon="&#xf015;">
+        <span>Meine Klausuren</span>
+      </a>
+    {% endif %}
+
+    {% if g.lehrer is none or g.lehrer.pwd_changed %}
+      {% for stufe in Stufe.query.all() %}
+        <a href="{{ url_for('klausuren.stufe', stufe_name=stufe.name) }}" data-icon="&#xf00b;">
+          <span>Klausuren {{ stufe.name }}</span>
+        </a>
+      {% endfor %}
+    {% endif %}
+
+    {% if g.lehrer is not none and g.lehrer.pwd_changed %}
+      {% if g.lehrer.can_access() %}
+        <a href="{{ url_for('schueler.versaeumnisse') }}" data-icon="&#xf5ae;">
+          <span>Versäumnisse</span>
+        </a>
+
+        {%
+          if Klausurteilnahme.query.join(Klausur)
+             .filter(Klausurteilnahme.versaeumt)
+             .filter(Klausurteilnahme.nachgeschrieben == false)
+             .filter(Klausur.stufe_name.in_(g.lehrer.accessible_stufen(names=True)))
+             .count() != 0
+        %}
+          <hr>
+          <a href="{{ url_for('fileio.export') }}" data-icon="&#xf56e;">
+            <span>Nachschreibplan exportieren</span>
+          </a>
+        {% elif g.lehrer.is_admin %}
+          <hr>
+        {% endif %}
+
+        {% if g.lehrer.is_admin %}
+          <a href="{{ url_for('fileio.import') }}" data-icon="&#xf56f;">
+            <span>Klausurpläne importieren</span>
+          </a>
+        {% endif %}
+      {% endif %}
+      <hr>
+
+      <a href="{{ url_for('auth.account') }}" data-icon="&#xf4fe;">
+        <span>Mein Konto</span>
+      </a>
+
+      {% if g.lehrer.is_admin %}
+        <a href="{{ url_for('admin.index') }}" data-icon="&#xf084;">
+          <span>Administration</span>
+        </a>
+      {% endif %}
+    {% endif %}
+  </nav>
+
+  <div id="flash-container">
+    {% for message in get_flashed_messages(with_categories=True) %}
+      {% if message[0] != 'alert' %}
+        <div class="flash flash-{{ message[0] }}" tabindex="0">
+          {{ message[1] | replace('\n', '<br>') }}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <div id="page-section">
+    <div id="page">
+      <main>
+        <noscript>
+          <p class="warn">
+            JavaScript ist in Ihrem Browser deaktiviert bzw. nicht unterstützt.
+            Diese Seite benötigt JavaScript, um richtig zu funktionieren.
+          </p>
+        </noscript>
+        {% if g.lehrer and g.lehrer.pwd_changed %}
+          {% if g.lehrer.email is none %}
+            <p class="warn">{#
+              #}Sie haben keine E-Mail-Adresse festgelegt.
+              <a href="{{ url_for('auth.account') }}">Festlegen</a>
+            </p>
+          {% elif not g.lehrer.is_confirmed %}
+            <p class="warn">Sie haben Ihre E-Mail-Adresse noch nicht bestätigt.</p>
+          {% endif %}
+        {% endif %}
+        <h2 class="page-heading">{% block header %}{% endblock %}</h2>
+        {% block content %}{% endblock %}
+      </main>
+
+      <footer>
+        <div class="footer-left">
+          <a href="{{ nateman_config['schule']['website-url'] }}">
+            <img id="school-logo"
+                 src="{{ nateman_config['schule'].get('schule.logo-url') or url_for('static', filename='img/school-logo.png') }}"
+                 alt="Schullogo" draggable="false">
+          </a>
+        </div>
+
+        <div class="footer-right">
+          <span style="float: left">
+            <a href="{{ nateman_config['schule']['website-url'] }}">
+              {{ nateman_config['schule']['name'] }}
+            </a>
+            <br>
+            <a href="https://github.com/nelsbrock/NateMan">
+              NateMan&nbsp;&ndash;&nbsp;Nachschreibtermin-Manager
+            </a>
+          </span>
+          <span style="float: right">
+            <a href="{{ nateman_config['schule']['imprint-url'] }}">Impressum</a>
+            &middot;
+            <a href="{{ nateman_config['schule']['privacy-policy-url'] }}">Datenschutz</a>
+            &middot;
+            <a href="{{ url_for('info.licenses') }}">Font-Lizenzen</a>
+          </span>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}" charset="utf-8"></script>
+  <script>
+    {% block js_body_end %}{% endblock %}
+  </script>
+
+</body>
+</html>

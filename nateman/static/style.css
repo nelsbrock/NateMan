@@ -1,0 +1,507 @@
+/* Cascading Style Sheet des NateMan von Niklas Elsbrock */
+
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #eeeeee;
+  --bg-tertiary: #dddddd;
+  --fg-main: #000000;
+  --fg-warn: #ff8000;
+  --fg-detail: #777777;
+  --bg-marked: #ffff00;
+  --header-bg: #87aa25;
+  --header-fg: #ffffff;
+  --navbar-bg: #143d59;
+  --navbar-fg: #ffffff;
+  --navbar-link-hover-bg: rgba(255, 255, 255, 0.25);
+  --footer-fg: #777777;
+  --footer-fg-detail: #cccccc;
+  --footer-bg: #eeeeee;
+
+  --navbar-width: 220px;
+  --navbar-padding-top: 18px;
+  --header-height: 80px;
+  --header-border-width: 2px;
+  --header-full-height: calc(var(--header-height) + var(--header-border-width));
+
+  --labeled-hr-color: #ff8000;
+}
+
+
+@font-face {
+  font-family: 'Lato';
+  src: local('Lato Regular'),
+       url('./font/lato/LatoLatin-Regular.eot') format('embedded-opentype'),
+       url('./font/lato/LatoLatin-Regular.woff2') format('woff2'),
+       url('./font/lato/LatoLatin-Regular.woff') format('woff'),
+       url('./font/lato/LatoLatin-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Lato';
+  font-style: italic;
+  src: local('Lato Italic'),
+       url('./font/lato/LatoLatin-Italic.eot') format('embedded-opentype'),
+       url('./font/lato/LatoLatin-Italic.woff2') format('woff2'),
+       url('./font/lato/LatoLatin-Italic.woff') format('woff'),
+       url('./font/lato/LatoLatin-Italic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Lato';
+  font-weight: bold;
+  src: local('Lato Bold'),
+       url('./font/lato/LatoLatin-Bold.eot') format('embedded-opentype'),
+       url('./font/lato/LatoLatin-Bold.woff2') format('woff2'),
+       url('./font/lato/LatoLatin-Bold.woff') format('woff'),
+       url('./font/lato/LatoLatin-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  font-display: block;
+  src: url('./font/fontawesome/fa-solid-900.eot') format('embedded-opentype'),
+       url('./font/fontawesome/fa-solid-900.woff2') format('woff2'),
+       url('./font/fontawesome/fa-solid-900.woff') format('woff'),
+       url('./font/fontawesome/fa-solid-900.ttf') format('truetype'),
+       url('./font/fontawesome/fa-solid-900.svg#svg_fontregular') format('svg');
+}
+
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+}
+
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Lato', sans-serif;
+  font-size: 16px;
+  line-height: 1.25;
+  background-color: var(--bg-primary);
+  color: var(--fg-main);
+}
+
+
+header {
+  display: table;
+  height: var(--header-height);
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background-color: var(--header-bg);
+  border-bottom: 2px solid #607a18;
+  overflow-y: hidden;
+  white-space: nowrap;
+  user-select: none;
+}
+
+header .header-text {
+  display: table-cell;
+  height: 100%;
+  width: 100%;
+  color: var(--header-fg);
+  text-decoration: none;
+  font-size: 40px;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle;
+}
+
+#nateman-logo-container {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--navbar-width);
+  height: var(--header-height);
+  text-align: center;
+}
+
+#nateman-logo {
+  --img-margin: 10px;
+  height: calc(var(--header-height) - 2 * var(--img-margin));
+  margin: var(--img-margin);
+}
+
+
+nav {
+  width: var(--navbar-width);
+  height: calc(100% - var(--header-full-height) - var(--navbar-padding-top));
+  margin-top: var(--header-full-height);
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: var(--navbar-bg);
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-top: var(--navbar-padding-top);
+  user-select: none;
+}
+
+nav a {
+  display: block;
+  padding: 8px 16px;
+  text-decoration: none;
+  font-size: 16px;
+  color: var(--navbar-fg);
+}
+
+nav a:hover {
+  background-color: var(--navbar-link-hover-bg);
+  text-decoration: none;
+}
+
+nav a > span {
+  display: table-cell;
+}
+
+nav a::before {
+  display: table-cell;
+  content: attr(data-icon);
+  width: 27px;
+  vertical-align: middle;
+}
+
+nav hr {
+  border: var(--navbar-link-hover-bg) solid 3px;
+  border-radius: 3px;
+  margin: 10px;
+}
+
+
+#page-section {
+  background-color: var(--bg-primary);
+  height: calc(100% - var(--header-full-height));
+  margin-left: var(--navbar-width);
+  margin-top: var(--header-full-height);
+  overflow-x: auto;
+  overflow-y: scroll;
+}
+
+#page {
+  display: flex;
+  flex-direction: column;
+  min-width: min-content;
+  min-height: 100%;
+}
+
+main {
+  flex: 1;
+  padding: 18px 25px 30px 25px;
+}
+
+main p {
+  text-align: justify;
+}
+
+
+footer {
+  display: table;
+  padding: 8px 10px;
+  color: var(--footer-fg);
+  font-size: 14px;
+  background-color: var(--footer-bg);
+  border-top: var(--footer-fg) solid 1px;
+}
+
+.footer-left,
+.footer-right {
+  display: table-cell;
+}
+
+.footer-left {
+  padding-right: 8px;
+  border-right: var(--footer-fg-detail) solid 1px;
+  vertical-align: middle;
+}
+
+#school-logo {
+  height: 35px;
+  vertical-align: middle;
+}
+
+.footer-right {
+  width: 100%;
+  padding-left: 8px;
+}
+
+
+#flash-container {
+  position: absolute;
+  width: 400px;
+  bottom: 0px;
+  right: 0px;
+  margin: 0px 27px 65px 0px;
+  display: flex;
+  flex-wrap: wrap-reverse;
+}
+
+.flash,
+.flash:hover {
+  text-decoration: none;
+  width: inherit;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.flash-success {
+  background-color: rgba(0, 255, 0, 0.5);
+  border-color: #008000 !important;
+}
+
+.flash-success:hover {
+  background-color: rgba(0, 255, 0, 0.7);
+}
+
+.flash-warning {
+  background-color: rgba(255, 255, 0, 0.5);
+  border-color: #808000 !important;
+}
+
+.flash-warning:hover {
+  background-color: rgba(255, 255, 0, 0.7);
+}
+
+.flash-error {
+  background-color: rgba(255, 0, 0, 0.5);
+  border-color: #800000 !important;
+}
+
+.flash-error:hover {
+  background-color: rgba(255, 0, 0, 0.6);
+}
+
+
+.table-aligned {
+  display: table;
+  box-sizing: border-box;
+  margin: -2px;
+}
+
+.table-aligned > div {
+  display: table-row;
+  box-sizing: content-box;
+}
+
+.table-aligned > div > div {
+  display: table-cell;
+  padding: 2px;
+}
+
+.table-aligned > div > div > input[type=text],
+.table-aligned > div > div > input[type=password],
+.table-aligned > div > div > input[type=email],
+.table-aligned > div > div > input[type=date],
+.table-aligned > div > div > select {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+
+table {
+  border: 2px solid var(--fg-main);
+  border-collapse: collapse;
+}
+
+table tr.clickable {
+  cursor: pointer;
+}
+
+table tr.clickable:hover,
+table tr.clickable:focus {
+  background-color: var(--bg-tertiary);
+  outline: none;
+}
+
+table tbody tr:nth-child(odd) {
+  background-color: var(--bg-primary);
+}
+
+table tbody tr:nth-child(even) {
+  background-color: var(--bg-secondary);
+}
+
+table th,
+table td {
+  border-top: 1px solid var(--fg-main);
+  border-right: 1px dotted var(--fg-main);
+  border-bottom: 1px solid var(--fg-main);
+  border-left: 1px dotted var(--fg-main);
+  padding: 4px 6px;
+}
+
+table th {
+  background-color: var(--bg-tertiary);
+  border-bottom: 2px solid var(--fg-main);
+}
+
+
+[data-icon]::before {
+  font-family: 'Font Awesome 5 Free';
+  font-style: normal;
+  font-weight: normal;
+  content: attr(data-icon) '\00A0';
+}
+
+
+p {
+  margin: 0.5em 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 1.2em 0 0.4em 0;
+}
+
+.page-heading {
+  margin: 0.8em 0 0.4em 0;
+}
+
+
+a {
+  color: inherit;
+  text-decoration: underline dotted;
+}
+
+a:hover {
+  text-decoration: underline solid;
+}
+
+
+a.scroll-anchor {
+  visibility: hidden;
+  color: #999999;
+  text-decoration: none;
+}
+
+a.scroll-anchor::before {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: normal;
+  content: '\f0c1';
+}
+
+:hover > a.scroll-anchor {
+  visibility: inherit;
+}
+
+a.scroll-anchor:hover {
+  color: #555555;
+}
+
+
+.warn {
+  color: var(--fg-warn);
+}
+
+.warn::before {
+  content: '\f071\00A0';
+}
+
+.detail {
+  color: var(--fg-detail);
+}
+
+.description {
+  font-style: italic;
+}
+
+.negative-status {
+  color: #bb0000;
+  font-weight: bold;
+}
+
+.negative-status::before {
+  content: '\f00d\00A0';
+}
+
+.positive-status {
+  color: #00bb00;
+}
+
+.positive-status::before {
+  content: '\f00c\00A0';
+}
+
+.warn::before,
+.negative-status::before,
+.positive-status::before {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: normal;
+}
+
+.marked {
+  border-radius: 3px;
+  background-color: var(--bg-marked);
+}
+
+.monospace {
+  font-family: 'Consolas', monospace;
+}
+
+
+hr,
+.labeled-hr::after {
+  border: var(--bg-secondary) solid 3px;
+  border-radius: 3px;
+  margin: 25px 0;
+}
+
+.labeled-hr {
+  display: flex;
+  margin: 20px 0;
+  color: var(--labeled-hr-color);
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.labeled-hr::after {
+  content: '';
+  width: 100%;
+  height: 0;
+  border-color: var(--labeled-hr-color);
+  margin: 7px 15px;
+}
+
+button.plain,
+input[type=submit].plain {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  cursor: pointer;
+}
+
+button[disabled].plain,
+input[type=submit][disabled].plain {
+  cursor: default;
+}
+
+fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+input.small {
+  width: 40px;
+}
+
+
+@media only screen and (max-width: 1100px) {
+  .header-text .optional {
+    display: none;
+  }
+}

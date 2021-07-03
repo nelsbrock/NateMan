@@ -1,0 +1,8 @@
+/NateMan.egg-info/
+/build/
+/dist/
+/instance/
+/venv/
+
+# pycache-Verzeichnisse überall ignorieren
+__pycache__/

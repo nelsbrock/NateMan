@@ -1,0 +1,90 @@
+{% extends 'base.html.j2' %}
+
+{#
+  NateMan – Nachschreibtermin-Manager
+  templates/admin/lehrer/edit.html.j2
+  Copyright © 2020  Niklas Elsbrock
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#}
+
+{% block title %}Lehrer(in): {{ lehrer.kuerzel }}{% endblock %}
+{% block header %}Lehrer(in): {{ lehrer.kuerzel }}{% endblock %}
+
+{# lehrer #}
+{% set stufen_list = Stufe.query.all() %}
+
+{% block js_head %}
+  var delete_warn = "Durch das Löschen eines Lehrerkontos werden alle Klausuren,\ndie dem gelöschten Konto zugeordnet "
+                  + "sind, unwiderruflich gelöscht.\nWollen Sie wirklich fortfahren?"
+{% endblock %}
+
+{% block content %}
+<form method="post">
+  <input name="action" type="hidden" value="change-credentials">
+
+  <div class="table-aligned">
+    <div>
+      <div><label for="new-kuerzel-input">Lehrerkürzel:</label></div>
+      <div><input type="text" name="new-kuerzel" id="new-kuerzel-input" value="{{ lehrer.kuerzel }}" required></div>
+    </div>
+    <div>
+      <div><label for="new-email-input">E-Mail-Adresse:</label></div>
+      <div>
+        <input type="email" name="new-email" id="new-email-input"
+               value="{% if lehrer.email %}{{ lehrer.email }}{% endif %}" autocomplete="off">
+      </div>
+      {% if lehrer.email is not none %}
+        <div>
+          {% if lehrer.is_confirmed %}
+            <span class="positive-status" title="bestätigt"></span>
+          {% else %}
+            <span class="negative-status">nicht bestätigt</span>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+    <div>
+      <div><label for="new-password-input">Neues Passwort:</label></div>
+      <div><input type="password" name="new-password" id="new-password-input" autocomplete="new-password"></div>
+    </div>
+    <div>
+      <div><label for="new-beraet-select">Beratungslehrer(in) von:</label></div>
+      <div><select name="new-beraet" id="new-beraet-select">
+        <option value="">(keine Stufe)</option>
+        {% for stufe in stufen_list %}
+          <option {% if stufe.name == lehrer.beraet.name %}selected{% endif %}>{{ stufe.name }}</option>
+        {% endfor %}
+      </select></div>
+    </div>
+    <div>
+      <div><label for="new-admin-cb">Administrator(in):</label></div>
+      <div>
+        <input type="checkbox" name="new-admin" id="new-admin-cb" value="admin"
+               {% if lehrer.is_admin %}checked{% endif %}>
+      </div>
+    </div>
+  </div>
+
+  <p><input type="submit" value="Speichern"></p>
+</form>
+
+<br>
+
+<form method="post">
+  <h3>Benutzerkonto löschen</h3>
+  <input name="action" type="hidden" value="delete-account">
+  <p><input onclick="return confirm(delete_warn)" type="submit" value="Benutzerkonto jetzt löschen"></p>
+</form>
+{% endblock %}

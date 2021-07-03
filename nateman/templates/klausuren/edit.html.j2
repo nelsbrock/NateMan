@@ -1,0 +1,348 @@
+{% extends 'base.html.j2' %}
+
+{#
+  NateMan – Nachschreibtermin-Manager
+  templates/klausuren/edit.html.j2
+  Copyright © 2020  Niklas Elsbrock
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#}
+
+{% block title %}
+  Klausur: {{ klausur.kursname }}
+  ({{ klausur.date_formatted() }}; {{ klausur.lehrer.kuerzel }}, {{ klausur.stufe.name }})
+{% endblock %}
+{% block header %}
+  Klausur: {{ klausur.kursname }}
+  ({{ klausur.date_formatted() }}; {{ klausur.lehrer.kuerzel }}, {{ klausur.stufe.name }})
+{% endblock %}
+
+{# klausur #}
+{# kt_list: Liste aller Klausurteilnahmen dieser Klausur #}
+{# not_in_klausur_list: Liste aller Schüler dieser Stufe, die nicht in dieser Klausur sind #}
+{% set lehrer_can_access = g.lehrer.can_access(klausur.stufe) %}
+{% set is_bygone = klausur.is_bygone() %}
+{% set no_edit = (klausur.edited or not is_bygone) and not lehrer_can_access %}
+
+
+{% block js_body_end %}
+  var schuelerCBs = document.getElementsByClassName("schueler-cb");
+
+  for (scb of schuelerCBs) {
+    scb.onchange = function () {
+      if (this.checked) {
+        this.parentNode.classList.add("marked");
+      } else {
+        this.parentNode.classList.remove("marked");
+      }
+    }
+
+    // beim Laden der Seite einmal ausführen
+    scb.onchange();
+  }
+
+  {% if not no_edit %}
+
+    var noneVersaeumtCB = document.getElementById("none-versaeumt");
+
+    noneVersaeumtCB.onchange = function () {
+      for (scb of schuelerCBs) {
+        scb.disabled = this.checked;
+        if (this.checked) {
+          scb.checked = false;
+          scb.onchange();
+        }
+      }
+    };
+
+    // beim Laden der Seite einmal ausführen
+    noneVersaeumtCB.onchange();
+
+    {% if lehrer_can_access %}
+      var laengeSelect = document.getElementById("laenge-select");
+      var flagAsEditedCb = document.getElementById("flag-as-edited-cb");
+      flagAsEditedCb.onchange = function () {
+        laengeSelect.required = this.checked;
+      }
+
+      // beim Laden der Seite einmal ausführen
+      flagAsEditedCb.onchange();
+    {% endif %}
+
+    var editSubmit = document.getElementById("edit-submit");
+    editSubmit.onclick = function () {
+      if (!noneVersaeumtCB.checked) {
+        var ok = false;
+        for (scb of schuelerCBs) {
+          if (scb.checked) {
+            ok = true;
+            break;
+          }
+        }
+
+        if (!ok {% if lehrer_can_access %} && flagAsEditedCb.checked {% endif %}) {
+          alert("Bitte wählen Sie etwas aus.");
+          return false;
+        }
+      }
+
+      {% if not lehrer_can_access %}
+        return confirm("Wollen Sie wirklich speichern?\nSie können die Klausur danach nicht mehr bearbeiten.");
+      {% else %}
+        return true;
+      {% endif %}
+    };
+
+
+    var selectNode = document.getElementById("added-schueler");
+    var addNewKoopSchuelerFormNode = document.getElementById("add-new-schueler-form");
+    var nksNachnameInputNode = document.getElementById("new-schueler-nachname-input");
+    var nksVornameInputNode = document.getElementById("new-schueler-vorname-input");
+
+    selectNode.onchange = function() {
+      if (selectNode.value === "new-schueler") {
+        addNewKoopSchuelerFormNode.style.display = "";
+        nksNachnameInputNode.required = true;
+        nksVornameInputNode.required = true;
+      } else {
+        addNewKoopSchuelerFormNode.style.display = "none";
+        nksNachnameInputNode.required = false;
+        nksVornameInputNode.required = false;
+      }
+    };
+
+    // beim Laden der Seite einmal ausführen
+    selectNode.onchange();
+  {% endif %}
+
+  {% if lehrer_can_access %}
+    var new_startperiod_input = document.getElementById('new-startperiod-input');
+    var new_endperiod_input = document.getElementById('new-endperiod-input');
+
+    new_startperiod_input.onchange = function () {
+      new_endperiod_input.min = parseInt(new_startperiod_input.value);
+    }
+
+    // beim Laden der Seite einmal ausführen
+    new_startperiod_input.onchange();
+  {% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+{% if not is_bygone %}
+  <p class="warn">Diese Klausur hat noch nicht stattgefunden.</p>
+{% endif %}
+
+{% if klausur.edited %}
+  <p class="warn">Diese Klausur wurde bereits bearbeitet.</p>
+{% endif %}
+
+<p class="description">
+  {{ zeitraum(klausur) }} Stunde;
+  {{ Klausurteilnahme.query.filter_by(klausur_id=klausur.id).count() }} Schüler(innen)
+</p>
+
+<form method="post">
+  <input type="hidden" name="action" value="edit">
+  <p>
+    <label>
+      Länge der Klausur:
+      <select name="laenge" id="laenge-select" required {% if no_edit %} disabled {% endif %}>
+        <option value="" {% if klausur.laenge is none %} selected {% endif %}
+                {% if not lehrer_can_access %} disabled {% endif %}>Bitte auswählen</option>
+        {% for l in nateman_config['klausuren']['klausurlaengen'] %}
+          <option value="{{ l }}" {% if l == klausur.laenge %} selected {% endif %}>{{ l }} Minuten</option>
+        {% endfor %}
+      </select>
+    </label>
+  </p>
+
+  {% if not no_edit %}
+    <p>
+      Setzen Sie <i>entweder</i> ein Häkchen dafür, dass kein(e) Schüler(in) die Klausur versäumt hat<br>
+      <i>oder</i> setzen Sie ein Häkchen bei allen Schüler(inne)n, die die Klausur versäumt haben.<br>
+      Gehört ein(e) Schüler(in) <i>nicht</i> mehr zum Kurs, entfernen Sie diese(n) durch Anklicken von 'x'.<br>
+      Klicken Sie anschließend auf 'Speichern'.
+    </p>
+  {% endif %}
+
+  <p>
+    <label>
+      <input type="checkbox" id="none-versaeumt" {% if no_edit %} disabled {% endif %}
+      {%
+        if klausur.edited and Klausurteilnahme.query.filter_by(klausur=klausur).filter_by(versaeumt=True).count() == 0
+      %}
+        checked
+      {% endif %}>
+      <b>kein(e)</b> Schüler(in) hat versäumt
+    </label>
+  </p>
+  <p id="schueler-list">
+    {% for kt in kt_list %}
+      <label class="schueler-cb-container">
+        <input type="checkbox" name="s_{{ kt.schueler.id }}" id="s_{{ kt.schueler.id }}" class="schueler-cb"
+               {% if kt.versaeumt %} checked {% endif %} {% if no_edit %} disabled {% endif %}>
+        {{ kt.schueler.nachname }}, {{ kt.schueler.vorname }}
+        <span class="detail">
+          ({% if kt.schueler.stammschule is not none %}{{ kt.schueler.stammschule.name }},
+           {% endif %}{{ kt.schueler.id }})
+        </span>
+      </label>
+      <input type="submit" form="remove-form" name="r_{{ kt.schueler.id }}" class="plain" value="&#xD7;"
+             title="entfernen" {% if no_edit %} disabled {% endif %}>
+      <br>
+    {% endfor %}
+  </p>
+  <p>
+    <label>
+      Bemerkung:
+      <input type="text" name="annotation" maxlength="{{ nateman_config['klausuren']['max-annotation-length'] }}"
+           value="{% if klausur.annotation %}{{ klausur.annotation }}{% endif %}" placeholder="optional"
+           {% if no_edit %} disabled {% endif %}>
+    </label>
+  </p>
+  {% if lehrer_can_access %}
+    <p>
+      <label>
+        <input type="checkbox" name="flag-as-edited" id="flag-as-edited-cb"
+               {% if is_bygone %} checked {% endif %}>
+        als bearbeitet markieren
+      </label>
+    </p>
+  {% endif %}
+  <p><input type="submit" id="edit-submit" value="Speichern" {% if no_edit %} disabled {% endif %}></p>
+</form>
+
+<form id="remove-form" method="post">
+  <input type="hidden" name="action" value="remove-schueler">
+</form>
+
+
+{% if not no_edit %}
+  <hr>
+
+  <form method="post">
+    <input type="hidden" name="action" value="add-schueler">
+
+    <p>
+      Fügen Sie eine(n) Schüler(in) hinzu, falls der/die Schüler(in) nicht bereits<br>
+      automatisch in der obigen Liste aufgeführt sein sollte.<br>
+      Nach dem Hinzufügen kann der/die Schüler(in) als versäumend markiert werden.
+    </p>
+
+    <h3>Schüler(in) hinzufügen:
+      <select name="added-schueler" id="added-schueler" required>
+        <option value="" selected disabled>Bitte auswählen</option>
+        <option value="new-schueler">Neue(n) Schüler(in) hinzufügen...</option>
+        {% for schueler in not_in_klausur_list %}
+          <option value="{{ schueler.id }}">{{ schueler.nachname }}, {{ schueler.vorname }}
+            ({% if schueler.stammschule is not none %}{{ schueler.stammschule.name }}, {% endif %}{{ schueler.id }})
+          </option>
+        {% endfor %}
+      </select>
+    </h3>
+
+    <div id="add-new-schueler-form">
+      <p>
+        Bevor Sie eine(n) neue(n) Schüler(in) hinzufügen, überprüfen Sie bitte,
+        ob diese(r) nicht bereits in der obigen Auswahl vorhanden ist.<br>
+        <b>Tipp:</b> In den meisten Browsern können Sie bei geöffneter Auswahl
+        den Nachnamen eingeben, um nach einem/einer Schüler(in) zu suchen.
+      </p>
+
+      <div class="table-aligned">
+        <div>
+          <div><label for="new-schueler-nachname-input">Nachname:</label></div>
+          <div><input type="text" name="new-schueler-nachname" id="new-schueler-nachname-input"></div>
+        </div>
+        <div>
+          <div><label for="new-schueler-nachname-input">Vorname:</label></div>
+          <div><input type="text" name="new-schueler-vorname" id="new-schueler-vorname-input"></div>
+        </div>
+        <div>
+          <div><label for="new-schueler-stammschule-select">Stammschule:</label></div>
+          <div>
+            <select name="new-schueler-stammschule" id="new-schueler-stammschule-select">
+              <option value="" selected>(kein(e) Koop-Schüler(in))</option>
+              {% for ks in Koopschule.query.all() %}
+                <option value="{{ ks.kuerzel }}">{{ ks.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <fieldset>
+      <label><input type="radio" name="add-to" value="klausur">Hinzufügen zu dieser Klausur</label><br>
+      <label><input type="radio" name="add-to" value="kurs" checked>Hinzufügen zu allen Klausuren dieses Kurses</label>
+    </fieldset>
+
+    <p><input type="submit" value="Hinzufügen"></p>
+  </form>
+
+  {% if lehrer_can_access %}
+    <hr>
+    <h3>Erweiterte Einstellungen</h3>
+
+    <form method="post">
+      <input type="hidden" name="action" value="edit-advanced">
+      <div class="table-aligned">
+        <div>
+          <div><label for="new-lehrer-select">Kurslehrer(in):</label></div>
+          <div>
+            <select name="new-lehrer" id="new-lehrer-select">
+              {% for l in Lehrer.query.order_by(Lehrer.kuerzel).all() %}
+                <option value="{{ l.id }}" {% if l == klausur.lehrer %}selected{% endif %}>{{ l.kuerzel }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div>
+          <div><label for="new-date-input">Klausurdatum:</label></div>
+          <div>
+            <input type="date" name="new-date" id="new-date-input"
+                     value="{{ klausur.date.strftime('%Y-%m-%d') }}" required>
+          </div>
+        </div>
+        <div>
+          <div>Klausurzeitraum:</div>
+          <div>
+            <input type="number" name="new-startperiod" id="new-startperiod-input" class="small" min="0"
+                   max="2147483647" value="{{ klausur.startperiod }}" required>{#
+            #}. bis
+            <input type="number" name="new-endperiod" id="new-endperiod-input" class="small" min="0" max="2147483647"
+                   value="{{ klausur.endperiod }}" required>{#
+            #}. Stunde
+          </div>
+        </div>
+      </div>
+
+      <p><input type="submit" value="Speichern"></p>
+    </form>
+
+    <form method="post">
+      <input type="hidden" name="action" value="delete">
+      <p>
+        <input type="submit" value="Diese Klausur löschen"
+             onclick="return confirm('Soll diese Klausur wirklich gelöscht werden?')">
+      </p>
+    </form>
+  {% endif %}
+
+{% endif %}
+{% endblock %}

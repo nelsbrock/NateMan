@@ -1,0 +1,91 @@
+{% extends 'base.html.j2' %}
+
+{#
+  NateMan – Nachschreibtermin-Manager
+  templates/klausuren/mine.html.j2
+  Copyright © 2020  Niklas Elsbrock
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#}
+
+{% block title %}Meine Klausuren{% endblock %}
+{% block header %}Meine Klausuren{% endblock %}
+
+{# klausuren_anstehend #}
+{# klausuren_vergangen #}
+
+{% block content %}
+
+<h3>vergangen:</h3>
+
+{% if klausuren_vergangen|length == 0 %}
+  <p>keine</p>
+{% else %}
+  <table>
+    <thead>
+      <tr>
+        <th>Datum</th>
+        <th>Stufe</th>
+        <th>Kurs</th>
+        <th>Zeitraum</th>
+        <th>bearbeitet</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for kv in klausuren_vergangen %}
+        <tr class="clickable" tabindex="0" data-href="{{ url_for('klausuren.edit', klausur_id=kv.id) }}">
+          <td>{{ kv.date_formatted() }}</td>
+          <td>{{ kv.stufe.name }}</td>
+          <td>{{ kv.kursname }}</td>
+          <td>{{ zeitraum(kv) }} Std.</td>
+          {% if kv.edited %}
+            <td class="positive-status">ja</td>
+          {% else %}
+            <td class="negative-status">nein</td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+
+
+<h3>anstehend:</h3>
+
+{% if klausuren_anstehend|length == 0 %}
+  <p>keine</p>
+{% else %}
+  <table>
+    <thead>
+      <tr>
+        <th>Datum</th>
+        <th>Stufe</th>
+        <th>Kurs</th>
+        <th>Zeitraum</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ka in klausuren_anstehend %}
+        <tr class="clickable" tabindex="0" data-href="{{ url_for('klausuren.edit', klausur_id=ka.id) }}">
+          <td>{{ ka.date_formatted() }}</td>
+          <td>{{ ka.stufe.name }}</td>
+          <td>{{ ka.kursname }}</td>
+          <td>{{ zeitraum(ka) }} Std.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+
+{% endblock %}

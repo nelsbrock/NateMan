@@ -1,0 +1,94 @@
+{% extends 'base.html.j2' %}
+
+{#
+  NateMan – Nachschreibtermin-Manager
+  templates/schueler/versaeumnisse.html.j2
+  Copyright © 2020  Niklas Elsbrock
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#}
+
+{% block title %}Versäumnisse{% endblock %}
+{% block header %}Versäumnisse{% endblock %}
+
+{#
+  versaeumt_dict: Dictinonary mit jeweils eimem Tupel aus zwei Listen aller nicht nachgeschriebenen bzw.
+                  nachgeschriebenen versäumten Klausurteilnahmen pro Stufe, auf die der angemeldete Lehrer Zugriff hat
+#}
+
+{% block content %}
+
+<form method="post">
+  {% for stufe, versaeumt_listen in versaeumt_dict.items() %}
+    <h3>{{ stufe.name }}</h3>
+
+    {% for versaeumt_list in versaeumt_listen %}
+      <h4>
+        {% if loop.first %}
+          noch nicht nachgeschrieben:
+        {% else %}
+          bereits nachgeschrieben:
+        {% endif %}
+      </h4>
+      {% if versaeumt_list|length == 0 %}
+        <p>keine</p>
+      {% else %}
+        <table>
+          <thead>
+            <tr>
+              <th>Schüler(in)</th>
+              <th>Klausurdatum</th>
+              <th>Kurs</th>
+              <th>Lehrer</th>
+              <th>Länge</th>
+              <th>Bemerkung</th>
+              <th>attestiert</th>
+              <th>nachgeschrieben</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for kt in versaeumt_list %}
+              <tr class="clickable" tabindex="0" data-href="{{ url_for('klausuren.edit', klausur_id=kt.klausur.id) }}">
+                <td>{{ kt.schueler.nachname }}, {{ kt.schueler.vorname }}
+                  <span class="detail">({% if kt.schueler.stammschule is not none %}{{ kt.schueler.stammschule.name }},
+                                        {% endif %}{{ kt.schueler.id }})</span>
+                </td>
+                <td>{{ kt.klausur.date_formatted() }}</td>
+                <td>{{ kt.klausur.kursname }}</td>
+                <td>{{ kt.klausur.lehrer.kuerzel }}</td>
+                <td>{{ kt.klausur.laenge }}</td>
+
+                {% if kt.klausur.annotation is not none %}
+                  <td class="description">{{ kt.klausur.annotation }}</td>
+                {% else %}
+                  <td class="detail">keine</td>
+                {% endif %}
+
+                <td><input type="checkbox" name="a_{{ kt.klausur.id }}:{{ kt.schueler.id }}"
+                           onclick="event.stopPropagation()" {% if kt.attestiert %}checked{% endif %}></td>
+                <td><input type="checkbox" name="n_{{ kt.klausur.id }}:{{ kt.schueler.id }}"
+                           onclick="event.stopPropagation()" {% if kt.nachgeschrieben %}checked{% endif %}></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+    {% endfor %}
+    <hr>
+  {% endfor %}
+
+  <p><input type="submit" value="Speichern"></p>
+</form>
+
+{% endblock %}

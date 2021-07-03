@@ -1,0 +1,78 @@
+{% extends 'base.html.j2' %}
+
+{#
+  NateMan – Nachschreibtermin-Manager
+  templates/klausuren/add.html.j2
+  Copyright © 2020  Niklas Elsbrock
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#}
+
+{% block title %}Klausur hinzufügen{% endblock %}
+{% block header %}Klausur hinzufügen{% endblock %}
+
+{% block js_body_end %}
+  var startperiod_input = document.getElementById('startperiod-input');
+  var endperiod_input = document.getElementById('endperiod-input');
+
+  startperiod_input.onchange = function () {
+    endperiod_input.min = parseInt(startperiod_input.value);
+  }
+
+  // beim Laden der Seite einmal ausführen
+  startperiod_input.onchange();
+{% endblock %}
+
+{% block content %}
+<form method="post">
+  <div class="table-aligned">
+    <div>
+      <div>Stufe:</div>
+      <div>{{ stufe.name }}</div>
+    </div>
+    <div>
+      <div><label for="kursname-input">Kursname:</label></div>
+      <div><input type="text" name="kursname" id="kursname-input" placeholder="z.B. M-GK3" required autofocus></div>
+    </div>
+    <div>
+      <div><label for="lehrer-select">Kurslehrer(in):</label></div>
+      <div>
+        <select name="lehrer" id="lehrer-select" required>
+          <option value="" selected disabled>Bitte auswählen</option>
+          {% for l in Lehrer.query.order_by(Lehrer.kuerzel).all() %}
+            <option value="{{ l.id }}">{{ l.kuerzel }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div>
+      <div><label for="date-input">Klausurdatum:</label></div>
+      <div><input type="date" name="date" id="date-input" required></div>
+    </div>
+    <div>
+      <div>Klausurzeitraum:</div>
+      <div>
+            <input type="number" name="startperiod" id="startperiod-input" class="small" min="0" max="2147483647"
+                   required>{#
+            #}. bis
+            <input type="number" name="endperiod" id="endperiod-input" class="small" min="0" max="2147483647"
+                   required>{#
+            #}. Stunde
+          </div>
+    </div>
+  </div>
+
+  <p><input type="submit" value="Hinzufügen"></p>
+</form>
+{% endblock %}

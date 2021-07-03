@@ -1,0 +1,30 @@
+{% extends 'email/base.html.j2' %}
+
+{#
+  NateMan – Nachschreibtermin-Manager
+  templates/email/confirmation.html.j2
+  Copyright © 2020  Niklas Elsbrock
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#}
+
+{% block header %}Bestätigung Ihrer E-Mail-Adresse für NateMan{% endblock %}
+
+
+{% block content %}
+  <p>
+    Um die E-Mail-Adresse für Ihr Benutzerkonto beim Nachschreibtermin-Manager zu
+    bestätigen, klicken Sie <a href="{{ url_for('auth.confirm_email', token=token, _external=True) }}">hier</a>.
+  </p>
+{% endblock %}
