@@ -46,12 +46,13 @@ def _smtp_create() -> Union[smtplib.SMTP, smtplib.SMTP_SSL]:
     return smtp
 
 
-def _send_mail(address: str, subject: str, content: str, content_type="html", content_charset="utf-8",
-               smtp: Optional[smtplib.SMTP] = None) -> None:
+def _send_mail(name: str, address: str, subject: str, content: str, content_type="html",
+               content_charset="utf-8", smtp: Optional[smtplib.SMTP] = None) -> None:
     """
     Sendet eine E-Mail mit den in der NateMan-Konfiguration angegebenen SMTP-Daten.
 
-    :param address: Adresse, zu der die E-Mail gesendet werden soll
+    :param name: Name des Empfängers
+    :param address: Adresse des Empfängers
     :param subject: Betreff der E-Mail
     :param content: Inhalt der E-Mail
     :param content_type: Inhaltstyp der E-Mail
@@ -64,6 +65,7 @@ def _send_mail(address: str, subject: str, content: str, content_type="html", co
 
     msg = MIMEText(content, content_type, content_charset)
     msg["From"] = f"NateMan <{sender_address}>"
+    msg["To"] = f"{name} <{address}>"
     msg["Subject"] = subject
 
     smtp_param = smtp is not None
@@ -86,16 +88,16 @@ def _send_mail(address: str, subject: str, content: str, content_type="html", co
         smtp.close()
 
 
-def send_confirmation_link_mail(address: str, token: str) -> None:
+def send_confirmation_link_mail(name: str, address: str, token: str) -> None:
     """Sendet die Bestätigungsemail nach dem Festlegen der E-Mail-Adresse."""
     content = render_template("email/confirmation.html.j2", token=token)
-    _send_mail(address, "NateMan: Bestätigung der E-Mail-Adresse", content)
+    _send_mail(name, address, "NateMan: Bestätigung der E-Mail-Adresse", content)
 
 
-def send_password_reset_mail(address: str, token: str) -> None:
+def send_password_reset_mail(name: str, address: str, token: str) -> None:
     """Sendet die Passwortzurücksetzungsemail."""
     content = render_template("email/password-reset.html.j2", token=token)
-    _send_mail(address, "NateMan: Passwortzurücksetzung", content)
+    _send_mail(name, address, "NateMan: Passwortzurücksetzung", content)
 
 
 def send_reminder_mails() -> int:
@@ -134,7 +136,7 @@ def send_reminder_mails() -> int:
 
         content = render_template("email/reminder.html.j2", not_edited_list=not_edited_list)
         try:
-            _send_mail(lehrer.email, "NateMan: zur Erinnerung", content, smtp=smtp)
+            _send_mail(lehrer.kuerzel, lehrer.email, "NateMan: zur Erinnerung", content, smtp=smtp)
         except smtplib.SMTPRecipientsRefused as exc:
             logger.info(f"Erinnerungsemail an {lehrer} mit der Adresse {lehrer.email} konnte nicht versandt werden "
                         f"(wahrscheinlich ungültige Adresse).", exc_info=exc)

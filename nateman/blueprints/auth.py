@@ -342,7 +342,7 @@ def password_reset():
 
             # Zurücksetzungsemail senden
             try:
-                emails.send_password_reset_mail(lehrer.email, new_token)
+                emails.send_password_reset_mail(lehrer.kuerzel, lehrer.email, new_token)
             except SMTPRecipientsRefused:
                 flash(f"Es konnte keine E-Mail an {lehrer.email} gesendet werden.\n"
                       f"Wahrscheinlich existiert diese Adresse nicht mehr.\n"
@@ -453,7 +453,7 @@ def account():
             token = util.random_uri_safe_string(32)
             # Bestätigungsemail senden
             try:
-                emails.send_confirmation_link_mail(new_email, token)
+                emails.send_confirmation_link_mail(g.lehrer.kuerzel, new_email, token)
             except SMTPRecipientsRefused:
                 flash(f"Wir konnten keine Bestätigungsemail an {new_email} senden. "
                       f"Wahrscheinlich existiert diese Adresse nicht.", "error")
