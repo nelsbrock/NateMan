@@ -21,11 +21,11 @@
 
 {% block title %}
   Klausur: {{ klausur.kursname }}
-  ({{ klausur.date_formatted() }}; {{ klausur.lehrer.kuerzel }}, {{ klausur.stufe.name }})
+  ({{ macros.date(klausur.date) }}; {{ klausur.lehrer.kuerzel }}, {{ klausur.stufe.name }})
 {% endblock %}
 {% block header %}
   Klausur: {{ klausur.kursname }}
-  ({{ klausur.date_formatted() }}; {{ klausur.lehrer.kuerzel }}, {{ klausur.stufe.name }})
+  ({{ macros.date(klausur.date) }}; {{ klausur.lehrer.kuerzel }}, {{ klausur.stufe.name }})
 {% endblock %}
 
 {# klausur #}
@@ -151,7 +151,7 @@
 {% endif %}
 
 <p class="description">
-  {{ zeitraum(klausur) }} Stunde;
+  {{ macros.zeitraum(klausur) }} Stunde;
   {{ Klausurteilnahme.query.filter_by(klausur_id=klausur.id).count() }} Schüler
 </p>
 

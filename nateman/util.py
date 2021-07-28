@@ -78,17 +78,6 @@ def validate_bcrypt_password(password: str) -> bool:
     return len(password.encode("utf-8")) <= 72
 
 
-def format_date(date_: date) -> str:
-    """
-    Formatiert ein Datumsobjekt nach dem deutschen Datumsformat, inklusive Wochentagkürzel (WW, DD.MM.YYYY).
-    von Niklas Elsbrock.
-
-    :param date_: zu formatierendes Datum
-    :return: formatiertes Datum als String
-    """
-    return date_.strftime("%a, %d.%m.%Y")
-
-
 def is_integer_string(s: str) -> bool:
     """
     Überprüft, ob der String ``s`` in einen Integer umgewandelt werden kann

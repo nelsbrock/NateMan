@@ -182,12 +182,6 @@ class Klausur(db.Model):
     def __str__(self):
         return f"{self.kursname}, {self.stufe.name} (ID:{self.id})"
 
-    def date_formatted(self) -> str:
-        """
-        :return: Klausurdatum als String im Format WW, DD.MM.YYYY (siehe util.format_date)
-        """
-        return util.format_date(self.date)
-
     def is_bygone(self):
         """
         :return: ``True``, falls diese Klausur vergangen ist, ``False``, falls nicht

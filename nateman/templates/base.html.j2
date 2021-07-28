@@ -2,14 +2,7 @@
 
 {# von Niklas Elsbrock #}
 
-
-{% macro zeitraum(klausur) -%}
-  {{- klausur.startperiod }}.
-  {%- if klausur.startperiod != klausur.endperiod -%}
-    &ndash;{{ klausur.endperiod }}.
-  {%- endif %}
-{%- endmacro %}
-
+{% import 'macros.j2' as macros %}
 
 <!-- generiert aus Template-Code von Niklas Elsbrock -->
 

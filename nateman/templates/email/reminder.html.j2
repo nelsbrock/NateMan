@@ -29,7 +29,7 @@
       {% for k in not_edited_list %}
         <li>
           <a href="{{ url_for('klausuren.edit', klausur_id=k.id, _external=True) }}">
-            {{ k.kursname }} ({{ k.date_formatted() }}; {{ k.stufe.name }})
+            {{ k.kursname }} ({{ macros.date(k.date) }}; {{ k.stufe.name }})
           </a>
         </li>
       {% endfor %}

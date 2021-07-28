@@ -1,0 +1,12 @@
+{% macro date(date) -%}
+  <time datetime="{{ date.strftime('%Y-%m-%d') }}">
+    {{- date.strftime('%a, %d.%m.%Y') -}}
+  </time>
+{%- endmacro %}
+
+{% macro zeitraum(klausur) -%}
+  {{- klausur.startperiod }}.
+  {%- if klausur.startperiod != klausur.endperiod -%}
+    &ndash;{{ klausur.endperiod }}.
+  {%- endif %}
+{%- endmacro %}

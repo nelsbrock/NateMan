@@ -45,10 +45,10 @@
     <tbody>
       {% for kv in klausuren_vergangen %}
         <tr class="clickable" tabindex="0" data-href="{{ url_for('klausuren.edit', klausur_id=kv.id) }}">
-          <td>{{ kv.date_formatted() }}</td>
+          <td>{{ macros.date(kv.date) }}</td>
           <td>{{ kv.stufe.name }}</td>
           <td>{{ kv.kursname }}</td>
-          <td>{{ zeitraum(kv) }} Std.</td>
+          <td>{{ macros.zeitraum(kv) }} Std.</td>
           {% if kv.edited %}
             <td class="positive-status">ja</td>
           {% else %}
@@ -78,10 +78,10 @@
     <tbody>
       {% for ka in klausuren_anstehend %}
         <tr class="clickable" tabindex="0" data-href="{{ url_for('klausuren.edit', klausur_id=ka.id) }}">
-          <td>{{ ka.date_formatted() }}</td>
+          <td>{{ macros.date(ka.date) }}</td>
           <td>{{ ka.stufe.name }}</td>
           <td>{{ ka.kursname }}</td>
-          <td>{{ zeitraum(ka) }} Std.</td>
+          <td>{{ macros.zeitraum(ka) }} Std.</td>
         </tr>
       {% endfor %}
     </tbody>

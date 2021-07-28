@@ -56,7 +56,7 @@
 {% else %}
   {% for dates_list in (dates_anstehend, dates_vergangen) %}
     {% if loop.index0 == 1 %}
-      <div id="heute" class="labeled-hr" data-icon="&#xf073;">heute ({{ util.format_date(datetime.now()) }})</div>
+      <div id="heute" class="labeled-hr" data-icon="&#xf073;">heute ({{ macros.date(datetime.now()) }})</div>
     {% endif %}
 
     {% for date in dates_list %}
@@ -65,7 +65,7 @@
 
       <h3>
         <span>
-          {{ util.format_date(date) }}:
+          {{ macros.date(date) }}:
           <a class="scroll-anchor" name="{{ date_iso }}" href="#{{ date_iso }}"></a>
         </span>
       </h3>
@@ -88,7 +88,7 @@
                 data-href="{{ url_for('klausuren.edit', klausur_id=k.id) }}" {% endif %}>
               <td>{{ k.lehrer.kuerzel }}</td>
               <td>{{ k.kursname }}</td>
-              <td>{{ zeitraum(k) }} Std.</td>
+              <td>{{ macros.zeitraum(k) }} Std.</td>
               {% if lehrer_can_access %}
                 {% if k.edited %}
                   <td class="positive-status">ja</td>

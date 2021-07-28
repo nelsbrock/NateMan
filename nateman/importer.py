@@ -78,8 +78,8 @@ def import_plan(xml_file: TextIO, stufe: Stufe, new_lehrer_pwd: str) -> None:
 
         if startperiod < 0 or startperiod > endperiod:
             raise KlausurplanImportError(f"Zu importierender Plan für die Stufe {stufe.name} enthält ungültigen "
-                                         f"Zeitraum (Termin: {util.format_date(date)}; VonStd: {startperiod} BisStd: "
-                                         f"{endperiod})")
+                                         f"Zeitraum (Termin: {termin.attributes['Datum'].value}; VonStd: {startperiod} "
+                                         f"BisStd: {endperiod})")
 
         if db.session.query(exists().where(and_(Klausur.date == date, Klausur.stufe == stufe))).scalar():
             raise KlausurplanImportError(f"Zu importierender Plan für die {stufe.name} enthält zwei Klausurtermine "

@@ -64,7 +64,7 @@
                   <span class="detail">({% if kt.schueler.stammschule is not none %}{{ kt.schueler.stammschule.name }},
                                         {% endif %}{{ kt.schueler.id }})</span>
                 </td>
-                <td>{{ kt.klausur.date_formatted() }}</td>
+                <td>{{ macros.date(kt.klausur.date) }}</td>
                 <td>{{ kt.klausur.kursname }}</td>
                 <td>{{ kt.klausur.lehrer.kuerzel }}</td>
                 <td>{{ kt.klausur.laenge }}</td>
