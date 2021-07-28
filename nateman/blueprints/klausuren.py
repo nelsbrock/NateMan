@@ -265,7 +265,7 @@ def edit(klausur_id):
         add_to = request.form["add-to"]
 
         if schueler_id is None:
-            flash("Bitte wählen Sie eine(n) Schüler(in) zum Hinzufügen aus.", "error")
+            flash("Bitte wählen Sie einen Schüler zum Hinzufügen aus.", "error")
             return reload_resp
 
         is_new = False
@@ -284,7 +284,7 @@ def edit(klausur_id):
                     return
 
             if not new_schueler_nachname or not new_schueler_vorname:
-                flash("Bitte geben Sie einen vollständigen Namen für den/die neue(n) Schüler(in) an.", "error")
+                flash("Bitte geben Sie einen vollständigen Namen für den neuen Schüler an.", "error")
                 return reload_resp
 
             schueler = Schueler(id=get_next_new_schueler_id(), nachname=new_schueler_nachname,
@@ -314,7 +314,7 @@ def edit(klausur_id):
             kt_entity = Klausurteilnahme(klausur=k, schueler=schueler)
             db.session.add(kt_entity)
 
-        current_app.logger.info(f"{g.lehrer} hat den/die{' neue(n)' if is_new else ''} Schüler(in) {schueler} "
+        current_app.logger.info(f"{g.lehrer} hat den{' neuen' if is_new else ''} Schüler {schueler} "
                                 f"zur Klausur {klausur} hinzugefügt.")
 
         db.session.commit()
@@ -327,7 +327,7 @@ def edit(klausur_id):
                 .all():
             if f"r_{kt.schueler.id}" in request.form:
                 db.session.delete(kt)
-                current_app.logger.info(f"{g.lehrer} hat den/die Schüler(in) {kt.schueler} aus der Klausur "
+                current_app.logger.info(f"{g.lehrer} hat den Schüler {kt.schueler} aus der Klausur "
                                         f"{kt.klausur} entfernt.")
 
         db.session.commit()

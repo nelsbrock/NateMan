@@ -46,7 +46,7 @@ def add_lehrer_command(kuerzel, password, admin):
     lehrer = Lehrer.query.filter_by(kuerzel=kuerzel).first()
 
     if lehrer is not None:
-        click.echo("Fehler: Ein(e) Lehrer(in) mit diesem Kürzel ist bereits registriert.", err=True)
+        click.echo("Fehler: Ein Lehrerkonto mit diesem Kürzel ist bereits registriert.", err=True)
         return 1
 
     if not password:
@@ -61,7 +61,7 @@ def add_lehrer_command(kuerzel, password, admin):
     db.session.add(new_lehrer)
     db.session.commit()
 
-    click.echo("Lehrer(in) wurde erfolgreich registriert.")
+    click.echo("Lehrerkonto wurde erfolgreich angelegt.")
     return 0
 
 
@@ -165,7 +165,7 @@ def remove_koopschule_command(kuerzel):
 @click.argument("kuerzel")
 @with_appcontext
 def make_admin_command(kuerzel):
-    """Gibt einem/einer Lehrer(in) Administratorrechte."""
+    """Gibt einem Lehrerkonto Administratorrechte."""
 
     lehrer = Lehrer.query.filter_by(kuerzel=kuerzel).first()
 
@@ -187,7 +187,7 @@ def make_admin_command(kuerzel):
 @click.argument("kuerzel")
 @with_appcontext
 def take_admin_command(kuerzel):
-    """Nimmt einem/einer Lehrer(in) seine/ihre Administratorrechte."""
+    """Nimmt einem Lehrerkonto seine Administratorrechte."""
 
     lehrer = Lehrer.query.filter_by(kuerzel=kuerzel).first()
 
@@ -218,7 +218,7 @@ def cleanup_command():
 @click.command("send-reminder-mails")
 @with_appcontext
 def send_reminder_mails_command():
-    """Sendet Erinnerungsemails an alle Lehrer(innen), die unbearbeitete vergangene Klausuren haben."""
+    """Sendet Erinnerungsemails an alle Lehrkräfte, die unbearbeitete vergangene Klausuren haben."""
     emails.send_reminder_mails()
     return 0
 

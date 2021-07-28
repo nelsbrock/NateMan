@@ -152,7 +152,7 @@
 
 <p class="description">
   {{ zeitraum(klausur) }} Stunde;
-  {{ Klausurteilnahme.query.filter_by(klausur_id=klausur.id).count() }} Schüler(innen)
+  {{ Klausurteilnahme.query.filter_by(klausur_id=klausur.id).count() }} Schüler
 </p>
 
 <form method="post">
@@ -172,10 +172,8 @@
 
   {% if not no_edit %}
     <p>
-      Setzen Sie <i>entweder</i> ein Häkchen dafür, dass kein(e) Schüler(in) die Klausur versäumt hat<br>
-      <i>oder</i> setzen Sie ein Häkchen bei allen Schüler(inne)n, die die Klausur versäumt haben.<br>
-      Gehört ein(e) Schüler(in) <i>nicht</i> mehr zum Kurs, entfernen Sie diese(n) durch Anklicken von 'x'.<br>
-      Klicken Sie anschließend auf 'Speichern'.
+      Setzen Sie ein Häkchen bei allen Schülern, die die Klausur versäumt haben.<br>
+      Klicken Sie zum Bestätigen auf 'Speichern'.
     </p>
   {% endif %}
 
@@ -187,7 +185,7 @@
       %}
         checked
       {% endif %}>
-      <b>kein(e)</b> Schüler(in) hat versäumt
+      <b>kein</b> Schüler hat versäumt
     </label>
   </p>
   <p id="schueler-list">
@@ -236,17 +234,10 @@
 
   <form method="post">
     <input type="hidden" name="action" value="add-schueler">
-
-    <p>
-      Fügen Sie eine(n) Schüler(in) hinzu, falls der/die Schüler(in) nicht bereits<br>
-      automatisch in der obigen Liste aufgeführt sein sollte.<br>
-      Nach dem Hinzufügen kann der/die Schüler(in) als versäumend markiert werden.
-    </p>
-
-    <h3>Schüler(in) hinzufügen:
+    <h3>Schüler hinzufügen:
       <select name="added-schueler" id="added-schueler" required>
         <option value="" selected disabled>Bitte auswählen</option>
-        <option value="new-schueler">Neue(n) Schüler(in) hinzufügen...</option>
+        <option value="new-schueler">Neuen Schüler hinzufügen...</option>
         {% for schueler in not_in_klausur_list %}
           <option value="{{ schueler.id }}">{{ schueler.nachname }}, {{ schueler.vorname }}
             ({% if schueler.stammschule is not none %}{{ schueler.stammschule.name }}, {% endif %}{{ schueler.id }})
@@ -256,13 +247,6 @@
     </h3>
 
     <div id="add-new-schueler-form">
-      <p>
-        Bevor Sie eine(n) neue(n) Schüler(in) hinzufügen, überprüfen Sie bitte,
-        ob diese(r) nicht bereits in der obigen Auswahl vorhanden ist.<br>
-        <b>Tipp:</b> In den meisten Browsern können Sie bei geöffneter Auswahl
-        den Nachnamen eingeben, um nach einem/einer Schüler(in) zu suchen.
-      </p>
-
       <div class="table-aligned">
         <div>
           <div><label for="new-schueler-nachname-input">Nachname:</label></div>
@@ -276,7 +260,7 @@
           <div><label for="new-schueler-stammschule-select">Stammschule:</label></div>
           <div>
             <select name="new-schueler-stammschule" id="new-schueler-stammschule-select">
-              <option value="" selected>(kein(e) Koop-Schüler(in))</option>
+              <option value="" selected>(kein Koop-Schüler)</option>
               {% for ks in Koopschule.query.all() %}
                 <option value="{{ ks.kuerzel }}">{{ ks.name }}</option>
               {% endfor %}
@@ -303,7 +287,7 @@
       <input type="hidden" name="action" value="edit-advanced">
       <div class="table-aligned">
         <div>
-          <div><label for="new-lehrer-select">Kurslehrer(in):</label></div>
+          <div><label for="new-lehrer-select">Kurslehrkraft:</label></div>
           <div>
             <select name="new-lehrer" id="new-lehrer-select">
               {% for l in Lehrer.query.order_by(Lehrer.kuerzel).all() %}

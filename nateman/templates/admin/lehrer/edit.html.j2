@@ -19,8 +19,8 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 
-{% block title %}Lehrer(in): {{ lehrer.kuerzel }}{% endblock %}
-{% block header %}Lehrer(in): {{ lehrer.kuerzel }}{% endblock %}
+{% block title %}Lehrerkonto: {{ lehrer.kuerzel }}{% endblock %}
+{% block header %}Lehrerkonto: {{ lehrer.kuerzel }}{% endblock %}
 
 {# lehrer #}
 {% set stufen_list = Stufe.query.all() %}
@@ -60,7 +60,7 @@
       <div><input type="password" name="new-password" id="new-password-input" autocomplete="new-password"></div>
     </div>
     <div>
-      <div><label for="new-beraet-select">Beratungslehrer(in) von:</label></div>
+      <div><label for="new-beraet-select">Beratungslehrkraft von:</label></div>
       <div><select name="new-beraet" id="new-beraet-select">
         <option value="">(keine Stufe)</option>
         {% for stufe in stufen_list %}
@@ -69,7 +69,7 @@
       </select></div>
     </div>
     <div>
-      <div><label for="new-admin-cb">Administrator(in):</label></div>
+      <div><label for="new-admin-cb">Administrator:</label></div>
       <div>
         <input type="checkbox" name="new-admin" id="new-admin-cb" value="admin"
                {% if lehrer.is_admin %}checked{% endif %}>

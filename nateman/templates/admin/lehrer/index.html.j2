@@ -25,7 +25,7 @@
 {% set lehrer_list = Lehrer.query.order_by(Lehrer.kuerzel).all() %}
 
 {% block content %}
-<p><a href="{{ url_for('admin.lehrer.add') }}" data-icon="&#xf234;">Lehrer(in) hinzufügen</a></p>
+<p><a href="{{ url_for('admin.lehrer.add') }}" data-icon="&#xf234;">Lehrerkonto hinzufügen</a></p>
 
 <p>Klicken Sie eine Zeile aus der folgenden Übersicht an, um ein bestehendes Benutzerkonto zu bearbeiten.</p>
 
@@ -35,7 +35,7 @@
       <th>Kürzel</th>
       <th>E-Mail-Adresse</th>
       <th>Admin</th>
-      <th>Beratungslehrer(in)</th>
+      <th>Beratungslehrkraft</th>
       <th>Passwort<br>gesetzt</th>
     </tr>
   </thead>

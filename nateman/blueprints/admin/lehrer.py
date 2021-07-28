@@ -137,7 +137,7 @@ def edit(lehrer_id):
         if change_beraet:
             lehrer.beraet = new_beraet
             if new_beraet:
-                current_app.logger.info(f"{g.lehrer} hat {lehrer} als Beratungslehrer(in) für die {new_beraet.name} "
+                current_app.logger.info(f"{g.lehrer} hat {lehrer} als Beratungslehrkraft für die {new_beraet.name} "
                                         f"festgelegt.")
             else:
                 current_app.logger.info(f"{g.lehrer} hat den Beratungslehrerstatus von {lehrer} entfernt.")
@@ -183,7 +183,7 @@ def add():
 
     # existiert das Kürzel bereits?
     if Lehrer.query.filter_by(kuerzel=kuerzel).count() != 0:
-        error_msg = "Ein(e) Lehrer(in) mit diesem Kürzel existiert bereits."
+        error_msg = "Ein Lehrerkonto mit diesem Kürzel existiert bereits."
 
     # ist das neue Passwort zu groß?
     elif not util.validate_bcrypt_password(password):
@@ -200,7 +200,7 @@ def add():
     db.session.add(new_lehrer)
     db.session.commit()
 
-    flash("Lehrer(in) erfolgreich hinzugefügt.", "success")
-    current_app.logger.info(f"{g.lehrer} hat den/die Lehrer(in) {new_lehrer} hinzugefügt")
+    flash("Lehrerkonto erfolgreich hinzugefügt.", "success")
+    current_app.logger.info(f"{g.lehrer} hat das Lehrerkonto {new_lehrer} hinzugefügt")
 
     return redirect(url_for(".edit", lehrer_id=new_lehrer.id), code=303)

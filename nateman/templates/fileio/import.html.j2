@@ -26,13 +26,13 @@
 
 {% block js_head %}
   var plan_delete_warn = "Durch das Löschen eines Plans werden alle importierten sowie nachträglich hinzugefügten\n"
-                       + "Daten der Stufe (Klausurtermine, Klausuren, Schüler(innen)) unwiderruflich gelöscht.\n"
+                       + "Daten der Stufe (Klausurtermine, Klausuren, Schüler) unwiderruflich gelöscht.\n"
                        + "Lehrerkonten bleiben unberührt.\n\nWollen Sie wirklich fortfahren?";
 
   var import_warn = "Durch das Importieren von Klausurplänen werden bestehende importierte sowie nachträglich "
-                  + "hinzugefügte\nDaten (Klausurtermine, Klausuren, Schüler(innen)) aller Stufen, für die neue Pläne "
+                  + "hinzugefügte\nDaten (Klausurtermine, Klausuren, Schüler) aller Stufen, für die neue Pläne "
                   + "importiert wurden, unwiderruflich gelöscht.\nBestehende Lehrerkonten bleiben unberührt.\n\n"
-                  + "Durch das Importieren von Koopschüler(inne)n werden alle bestehenden Koopschüler(innen) "
+                  + "Durch das Importieren von Koopschülern werden alle bestehenden Koopschüler "
                   + "gelöscht.\n\nWollen Sie wirklich fortfahren?";
 {% endblock %}
 
@@ -71,13 +71,13 @@
   </div>
   <p>
     <label>
-      Koopschüler(innen)liste:
+      Koopschülerliste:
       <input type="file" name="koopschueler" id="koopschueler-input" accept=".xlsx,.xlsm,.xltx,.xltm">
     </label>
   </p>
   <p>
     <label>
-      Passwort für neu registrierte Lehrer(innen):
+      Passwort für neu registrierte Lehrerkonten:
       <input name="new-lehrer-password" type="text" id="new-lehrer-password-input"
              value="{{ nateman_config['default-new-lehrer-password'] }}">
     </label>

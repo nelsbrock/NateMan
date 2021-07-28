@@ -126,16 +126,16 @@ def import_plan(xml_file: TextIO, stufe: Stufe, new_lehrer_pwd: str) -> None:
                 else:
                     # Ist dieser Schüler bereits für eine andere Stufe eingetragen? -> Fehler
                     if schueler_entity.stufe != stufe:
-                        raise KlausurplanImportError(f"Zu importierender Plan für die {stufe.name} enthält Schüler(in) "
+                        raise KlausurplanImportError(f"Zu importierender Plan für die {stufe.name} enthält Schüler "
                                                      f"({schueler_vorname} {schueler_nachname}, "
-                                                     f"DbIdNr: {schueler_dbid}), der/die bereits für die "
+                                                     f"DbIdNr: {schueler_dbid}), der bereits für die "
                                                      f"{schueler_entity.stufe.name} eingetragen ist.")
 
                     # Ist derselbe Schüler bereits in dieser Klausur? -> Fehler
                     if db.session.query(exists().where(and_(Klausurteilnahme.schueler == schueler_entity,
                                                             Klausurteilnahme.klausur == klausur_entity))).scalar():
-                        raise KlausurplanImportError(f"Zu importierender Plan für die {stufe.name} enthält selbe(n) "
-                                                     f"Schüler(in) ({schueler_vorname} {schueler_nachname}, "
+                        raise KlausurplanImportError(f"Zu importierender Plan für die {stufe.name} enthält selben "
+                                                     f"Schüler ({schueler_vorname} {schueler_nachname}, "
                                                      f"DbIdNr: {schueler_dbid}) mehrfach in "
                                                      f"derselben Klausur ({kursname}).")
 
@@ -207,7 +207,7 @@ def excelimport(filepath: str):
                         db.session.add(schueler_entity)
                         db.session.add(teilnahme_entity)
                 else:
-                    raise KoopSchuelerImportError("Für den/die Schüler(in) " + s[0] + ", " + s[1]
+                    raise KoopSchuelerImportError("Für den Schüler " + s[0] + ", " + s[1]
                                                   + "konnte keine Koopschule mit dem Kürzel " + s[4]
                                                   + " gefunden werden.")
             else:

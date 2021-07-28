@@ -80,9 +80,9 @@ def import_():
 
     error_msg = None
     if not new_lehrer_password:
-        error_msg = "Bitte geben Sie das Passwort für neu registrierte Lehrer(innen) an."
+        error_msg = "Bitte geben Sie das Passwort für neu registrierte Lehrerkonten an."
     elif not util.validate_bcrypt_password(new_lehrer_password):
-        error_msg = "Das Passwort für neue Lehrer(innen) darf nicht mehr als 72 Zeichen enthalten."
+        error_msg = "Das Passwort für neue Lehrerkonten darf nicht mehr als 72 Zeichen enthalten."
     if error_msg is not None:
         flash(error_msg, "error")
         return redirect(url_for(".import"), code=303)

@@ -328,12 +328,12 @@ def password_reset():
             lehrer = Lehrer.query.filter_by(kuerzel=lehrer_kuerzel, email=email_address).first()
 
             if lehrer is None:
-                flash("Es gibt keine(n) Lehrer(in) mit den angegebenen Kriterien.", "error")
+                flash("Es gibt keine Lehrkraft mit den angegebenen Kriterien.", "error")
                 return redirect(url_for(".password_reset"), code=303)
 
             if not lehrer.is_confirmed:
-                flash("Es gibt eine(n) Lehrer(in) mit den angegebenen Kriterien, allerdings ist dessen/deren "
-                      "E-Mail-Adresse nicht bestätigt.\nWenden Sie sich an eine(n) Administrator(in).", "error")
+                flash("Es gibt eine Lehrkraft mit den angegebenen Kriterien, allerdings ist deren "
+                      "E-Mail-Adresse nicht bestätigt.\nWenden Sie sich an einen Administrator.", "error")
                 return redirect(url_for(".password_reset"), code=303)
 
             new_token = util.random_uri_safe_string(64)
@@ -346,7 +346,7 @@ def password_reset():
             except SMTPRecipientsRefused:
                 flash(f"Es konnte keine E-Mail an {lehrer.email} gesendet werden.\n"
                       f"Wahrscheinlich existiert diese Adresse nicht mehr.\n"
-                      f"Wenden Sie sich an eine(n) Administrator(in).", "error")
+                      f"Wenden Sie sich an einen Administrator.", "error")
                 return redirect(url_for(".password_reset"), code=303)
 
             db.session.commit()
