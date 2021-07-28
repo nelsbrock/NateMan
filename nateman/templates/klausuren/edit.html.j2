@@ -70,10 +70,10 @@
     noneVersaeumtCB.onchange();
 
     {% if lehrer_can_access %}
-      var laengeSelect = document.getElementById("laenge-select");
+      var laengeInput = document.getElementById("laenge-input");
       var flagAsEditedCb = document.getElementById("flag-as-edited-cb");
       flagAsEditedCb.onchange = function () {
-        laengeSelect.required = this.checked;
+        laengeInput.required = this.checked;
       }
 
       // beim Laden der Seite einmal ausführen
@@ -160,13 +160,10 @@
   <p>
     <label>
       Länge der Klausur:
-      <select name="laenge" id="laenge-select" required {% if no_edit %} disabled {% endif %}>
-        <option value="" {% if klausur.laenge is none %} selected {% endif %}
-                {% if not lehrer_can_access %} disabled {% endif %}>Bitte auswählen</option>
-        {% for l in nateman_config['klausuren']['klausurlaengen'] %}
-          <option value="{{ l }}" {% if l == klausur.laenge %} selected {% endif %}>{{ l }} Minuten</option>
-        {% endfor %}
-      </select>
+      <input type="number" name="laenge" id="laenge-input" class="small" min="0" max="2147483647"
+             {% if klausur.laenge is not none %} value="{{ klausur.laenge }}" {% endif %}
+             {% if not lehrer_can_access %} required {% endif %}>
+      Minuten
     </label>
   </p>
 

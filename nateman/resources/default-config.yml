@@ -34,13 +34,6 @@ schule:
 klausuren:
   # Maximale Zeichenanzahl für Bemerkungen
   max-annotation-length: 64
-  # Bei der Klausurbearbeitung auswählbare Klausurlängen.
-  # Bestehende Daten werden von einer Änderung nicht beeinflusst.
-  klausurlaengen:
-    - 45
-    - 60
-    - 135
-    - 180
 
 
 # Logging-Einstellungen

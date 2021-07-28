@@ -171,6 +171,7 @@ def edit(klausur_id):
         flag_as_edited = ("flag-as-edited" in request.form)
 
         klausur_laenge_str = request.form.get("laenge", None)
+        print(klausur_laenge_str)
         if lehrer_can_access and not klausur_laenge_str:
             klausur_laenge = None
         else:
@@ -179,11 +180,7 @@ def edit(klausur_id):
             except ValueError:
                 abort(400)
                 return
-
-            if klausur_laenge not in config["klausuren"]["klausurlaengen"]:
-                abort(400)
-                return
-
+        print(klausur_laenge)
         klausur.laenge = klausur_laenge
 
         for kt in Klausurteilnahme.query.filter_by(klausur=klausur).all():
