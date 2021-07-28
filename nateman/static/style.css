@@ -18,7 +18,7 @@
   --footer-bg: #eeeeee;
 
   --navbar-width: 220px;
-  --navbar-padding-top: 18px;
+  --navbar-padding-vertical: 18px;
   --header-height: 80px;
   --header-border-width: 2px;
   --header-full-height: calc(var(--header-height) + var(--header-border-width));
@@ -133,7 +133,7 @@ header .header-text {
 
 nav {
   width: var(--navbar-width);
-  height: calc(100% - var(--header-full-height) - var(--navbar-padding-top));
+  height: calc(100% - var(--header-full-height) - 2 * var(--navbar-padding-vertical));
   margin-top: var(--header-full-height);
   position: fixed;
   top: 0;
@@ -141,7 +141,7 @@ nav {
   background-color: var(--navbar-bg);
   overflow-x: hidden;
   overflow-y: auto;
-  padding-top: var(--navbar-padding-top);
+  padding: var(--navbar-padding-vertical) 0;
   user-select: none;
 }
 
