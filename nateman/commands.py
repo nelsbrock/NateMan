@@ -151,7 +151,7 @@ def remove_koopschule_command(kuerzel):
     koop_schule = Koopschule.query.filter_by(kuerzel=kuerzel).first()
 
     if koop_schule is None:
-        click.echo(f"Fehler: DEine Koop-Schule mit dem Kürzel {kuerzel} existiert nicht.", err=True)
+        click.echo(f"Fehler: Eine Koop-Schule mit dem Kürzel {kuerzel} existiert nicht.", err=True)
         return 1
 
     db.session.delete(koop_schule)
