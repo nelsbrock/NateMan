@@ -17,10 +17,10 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 
-{% macro date(date) -%}
-  <time datetime="{{ date.strftime('%Y-%m-%d') }}">
+{% macro date(date, tag=true) -%}
+  {% if tag %}<time datetime="{{ date.strftime('%Y-%m-%d') }}">{% endif %}
     {{- date.strftime('%a, %d.%m.%Y') -}}
-  </time>
+  {% if tag %}</time>{% endif %}
 {%- endmacro %}
 
 {% macro zeitraum(klausur) -%}

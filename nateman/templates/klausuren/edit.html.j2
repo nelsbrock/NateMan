@@ -21,7 +21,7 @@
 
 {% block title %}
   Klausur: {{ klausur.kursname }}
-  ({{ macros.date(klausur.date) }}; {{ klausur.lehrer.kuerzel }}, {{ klausur.stufe.name }})
+  ({{ macros.date(klausur.date, tag=false) }}; {{ klausur.lehrer.kuerzel }}, {{ klausur.stufe.name }})
 {% endblock %}
 {% block header %}
   Klausur: {{ klausur.kursname }}
