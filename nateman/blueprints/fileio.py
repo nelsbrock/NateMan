@@ -160,4 +160,4 @@ def _del_plan(stufe: Stufe):
 
 def _del_koopschueler():
     """Löscht alle Koopschüler"""
-    Schueler.query.filter(Schueler.stammschule != None).delete()
+    Schueler.query.filter(Schueler.koop).delete()

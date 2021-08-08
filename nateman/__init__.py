@@ -33,7 +33,7 @@ from werkzeug.utils import find_modules, import_string
 from . import util
 from .config_manager import config_file_exists, create_config_file, config
 from .config_manager import read_config_file
-from .models import Klausur, Klausurteilnahme, Koopschule, Lehrer, Schueler, Stufe, db
+from .models import Klausur, Klausurteilnahme, Lehrer, Schueler, Stufe, db
 
 
 def create_app() -> Flask:
@@ -134,8 +134,7 @@ def configure_jinja(app: Flask):
         Stufe=Stufe,
         Schueler=Schueler,
         Lehrer=Lehrer,
-        Klausur=Klausur,
-        Koopschule=Koopschule
+        Klausur=Klausur
     )
     app.jinja_env.trim_blocks = True
     app.jinja_env.lstrip_blocks = True

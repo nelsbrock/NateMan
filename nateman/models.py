@@ -58,11 +58,9 @@ class Schueler(db.Model):
     vorname = db.Column(db.String(collation="NOCASE"), nullable=False)
     stufe_name = db.Column(db.String(), db.ForeignKey("stufe.name", onupdate="CASCADE", ondelete="CASCADE"),
                            nullable=False)
-    stammschule_name = db.Column(db.String(),
-                                 db.ForeignKey("koopschule.kuerzel", onupdate="CASCADE", ondelete="CASCADE"))
+    koop = db.Column(db.Boolean, default=False, nullable=False)
 
     stufe = db.relationship("Stufe", lazy="select")
-    stammschule = db.relationship("Koopschule", lazy="select")
 
     def __str__(self):
         return f"{self.nachname}, {self.vorname} ({self.stufe.name}, ID:{self.id})"
@@ -187,11 +185,6 @@ class Klausur(db.Model):
         :return: ``True``, falls diese Klausur vergangen ist, ``False``, falls nicht
         """
         return self.date <= datetime.now().date()
-
-
-class Koopschule(db.Model):
-    kuerzel = db.Column(db.String(), primary_key=True)
-    name = db.Column(db.String())
 
 
 class Session(db.Model):

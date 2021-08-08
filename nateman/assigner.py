@@ -21,7 +21,7 @@ from typing import List
 
 def iscoopLk(kurs: List):
     for k in kurs:
-        if k.schueler.stammschule is not None:
+        if k.schueler.koop:
             return True
     return False
 

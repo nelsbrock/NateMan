@@ -25,7 +25,7 @@ from flask import Blueprint, abort, current_app, flash, g, redirect, render_temp
 
 from .auth import login_required, beratungslehrer_required
 from ..config_manager import config
-from ..models import Klausur, Klausurteilnahme, Koopschule, Lehrer, Schueler, db, \
+from ..models import Klausur, Klausurteilnahme, Lehrer, Schueler, db, \
     get_next_new_schueler_id, Stufe
 
 bp = Blueprint("klausuren", __name__, url_prefix="/klausuren")
@@ -270,15 +270,7 @@ def edit(klausur_id):
             is_new = True
             new_schueler_nachname = request.form["new-schueler-nachname"].strip()
             new_schueler_vorname = request.form["new-schueler-vorname"].strip()
-            new_schueler_stammschule_kuerzel = request.form.get("new-schueler-stammschule", None)
-
-            stammschule = None
-            if new_schueler_stammschule_kuerzel:
-                stammschule = Koopschule.query.filter_by(kuerzel=new_schueler_stammschule_kuerzel).first()
-
-                if stammschule is None:
-                    abort(400)
-                    return
+            new_schueler_koop = ("new-schueler-koop" in request.form)
 
             if not new_schueler_nachname or not new_schueler_vorname:
                 flash("Bitte geben Sie einen vollständigen Namen für den neuen Schüler an.", "error")
@@ -286,7 +278,7 @@ def edit(klausur_id):
 
             schueler = Schueler(id=get_next_new_schueler_id(), nachname=new_schueler_nachname,
                                 vorname=new_schueler_vorname, stufe=klausur.stufe,
-                                stammschule=stammschule)
+                                koop=new_schueler_koop)
             db.session.add(schueler)
 
         else:

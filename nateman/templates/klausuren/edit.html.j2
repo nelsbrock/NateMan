@@ -191,10 +191,7 @@
         <input type="checkbox" name="s_{{ kt.schueler.id }}" id="s_{{ kt.schueler.id }}" class="schueler-cb"
                {% if kt.versaeumt %} checked {% endif %} {% if no_edit %} disabled {% endif %}>
         {{ kt.schueler.nachname }}, {{ kt.schueler.vorname }}
-        <span class="detail">
-          ({% if kt.schueler.stammschule is not none %}{{ kt.schueler.stammschule.name }},
-           {% endif %}{{ kt.schueler.id }})
-        </span>
+        <span class="detail">({{ kt.schueler.id }}{% if kt.schueler.koop %}, Koop{% endif %})</span>
       </label>
       <input type="submit" form="remove-form" name="r_{{ kt.schueler.id }}" class="plain" value="&#xD7;"
              title="entfernen" {% if no_edit %} disabled {% endif %}>
@@ -237,7 +234,7 @@
         <option value="new-schueler">Neuen Schüler hinzufügen...</option>
         {% for schueler in not_in_klausur_list %}
           <option value="{{ schueler.id }}">{{ schueler.nachname }}, {{ schueler.vorname }}
-            ({% if schueler.stammschule is not none %}{{ schueler.stammschule.name }}, {% endif %}{{ schueler.id }})
+            ({{ schueler.id }}{% if schueler.koop %}, Koop{% endif %})
           </option>
         {% endfor %}
       </select>
@@ -254,15 +251,8 @@
           <div><input type="text" name="new-schueler-vorname" id="new-schueler-vorname-input"></div>
         </div>
         <div>
-          <div><label for="new-schueler-stammschule-select">Stammschule:</label></div>
-          <div>
-            <select name="new-schueler-stammschule" id="new-schueler-stammschule-select">
-              <option value="" selected>(kein Koop-Schüler)</option>
-              {% for ks in Koopschule.query.all() %}
-                <option value="{{ ks.kuerzel }}">{{ ks.name }}</option>
-              {% endfor %}
-            </select>
-          </div>
+          <div><label for="new-schueler-koop-cb">Koop-Schüler:</label></div>
+          <div><input type="checkbox" name="new-schueler-koop" id="new-schueler-koop-cb"></div>
         </div>
       </div>
 

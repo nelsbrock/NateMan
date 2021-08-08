@@ -29,7 +29,7 @@ from xml.dom import minidom
 
 from . import util
 from .config_manager import config
-from .models import Klausur, Klausurteilnahme, Lehrer, Schueler, Stufe, db, get_next_new_schueler_id, Koopschule
+from .models import Klausur, Klausurteilnahme, Lehrer, Schueler, Stufe, db, get_next_new_schueler_id
 
 
 class KlausurplanImportError(Exception):
@@ -198,18 +198,11 @@ def excelimport(filepath: str):
                     klausuren.pop(i)
             if len(klausuren) > 0:
                 schueler_entity = Schueler(id=get_next_new_schueler_id(), nachname=s[0], vorname=s[1],
-                                           stufe=klausuren[0].stufe)
-                schule_entity = Koopschule.query.filter_by(kuerzel=s[4]).first()
-                if schule_entity is not None:
-                    schueler_entity.stammschule = schule_entity
-                    for klausur in klausuren:
-                        teilnahme_entity = Klausurteilnahme(klausur=klausur, schueler=schueler_entity)
-                        db.session.add(schueler_entity)
-                        db.session.add(teilnahme_entity)
-                else:
-                    raise KoopSchuelerImportError("Für den Schüler " + s[0] + ", " + s[1]
-                                                  + "konnte keine Koopschule mit dem Kürzel " + s[4]
-                                                  + " gefunden werden.")
+                                           stufe=klausuren[0].stufe, koop=True)
+                for klausur in klausuren:
+                    teilnahme_entity = Klausurteilnahme(klausur=klausur, schueler=schueler_entity)
+                    db.session.add(schueler_entity)
+                    db.session.add(teilnahme_entity)
             else:
                 exceptions.append(s)
 

@@ -61,8 +61,7 @@
             {% for kt in versaeumt_list %}
               <tr class="clickable" tabindex="0" data-href="{{ url_for('klausuren.edit', klausur_id=kt.klausur.id) }}">
                 <td>{{ kt.schueler.nachname }}, {{ kt.schueler.vorname }}
-                  <span class="detail">({% if kt.schueler.stammschule is not none %}{{ kt.schueler.stammschule.name }},
-                                        {% endif %}{{ kt.schueler.id }})</span>
+                  <span class="detail">({{ kt.schueler.id }}{% if kt.schueler.koop %}, Koop{% endif %})</span>
                 </td>
                 <td>{{ macros.date(kt.klausur.date) }}</td>
                 <td>{{ kt.klausur.kursname }}</td>

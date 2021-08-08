@@ -25,7 +25,7 @@ from flask.cli import with_appcontext
 from nateman.exporter import excelexport
 from nateman.importer import excelimport, KoopSchuelerImportError
 from . import emails, util, assigner
-from .models import Koopschule, Lehrer, Stufe, db, Session
+from .models import Lehrer, Stufe, db, Session
 from .config_manager import config
 
 
@@ -121,46 +121,6 @@ def remove_stufe_command(name, yes):
     return 0
 
 
-@click.command("add-koopschule")
-@click.argument("kuerzel", type=click.STRING)
-@click.argument("name", type=click.STRING)
-@with_appcontext
-def add_koopschule_command(kuerzel, name):
-    """Fügt eine Koop-Schule zur Datenbank hinzu."""
-    koop_schule = Koopschule.query.filter_by(name=name).first()
-
-    if koop_schule is not None:
-        click.echo(f"Fehler: Eine Koop-Schule mit dem Kürzel {kuerzel} existiert bereits.", err=True)
-        return 1
-
-    new_koop_schule = Koopschule(kuerzel=kuerzel, name=name)
-    db.session.add(new_koop_schule)
-
-    db.session.commit()
-
-    click.echo("Die Koop-Schule wurde erfolgreich hinzugefügt.")
-    return 0
-
-
-@click.command("remove-koopschule")
-@click.argument("kuerzel", type=click.STRING)
-@with_appcontext
-def remove_koopschule_command(kuerzel):
-    """Entfernt eine Koop-Schule und alle mit ihr verknüpften Daten von der Datenbank."""
-
-    koop_schule = Koopschule.query.filter_by(kuerzel=kuerzel).first()
-
-    if koop_schule is None:
-        click.echo(f"Fehler: Eine Koop-Schule mit dem Kürzel {kuerzel} existiert nicht.", err=True)
-        return 1
-
-    db.session.delete(koop_schule)
-    db.session.commit()
-
-    click.echo("Die Koop-Schule wurde erfolgreich entfernt.")
-    return 0
-
-
 @click.command("make-admin")
 @click.argument("kuerzel")
 @with_appcontext
@@ -250,8 +210,6 @@ def init_commands():
     cli.add_command(take_admin_command)
     cli.add_command(add_stufe_command)
     cli.add_command(remove_stufe_command)
-    cli.add_command(add_koopschule_command)
-    cli.add_command(remove_koopschule_command)
     cli.add_command(send_reminder_mails_command)
     cli.add_command(apply_email_format_command)
     cli.add_command(cleanup_command)
