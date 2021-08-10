@@ -1,4 +1,3 @@
-include wsgi.py
 graft nateman/resources
 graft nateman/static
 graft nateman/templates
