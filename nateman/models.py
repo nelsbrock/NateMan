@@ -29,7 +29,6 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.sql import func
 
 from . import util
-from .config_manager import config
 
 db: SQLAlchemy = SQLAlchemy()
 

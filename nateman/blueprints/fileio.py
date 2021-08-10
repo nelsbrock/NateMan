@@ -21,10 +21,10 @@ Export- und Import-Blueprint
 import os
 import tempfile
 from datetime import datetime
+from pyexpat import ExpatError
 
 from flask import abort, Blueprint, current_app, g, redirect, url_for, flash, request, render_template
 from openpyxl.utils.exceptions import InvalidFileException
-from pyexpat import ExpatError
 
 from .auth import beratungslehrer_required, admin_required
 from .. import exporter, util

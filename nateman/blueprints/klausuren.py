@@ -25,8 +25,7 @@ from flask import Blueprint, abort, current_app, flash, g, redirect, render_temp
 
 from .auth import login_required, beratungslehrer_required
 from ..config_manager import config
-from ..models import Klausur, Klausurteilnahme, Lehrer, Schueler, db, \
-    get_next_new_schueler_id, Stufe
+from ..models import Klausur, Klausurteilnahme, Lehrer, Schueler, db, get_next_new_schueler_id, Stufe
 
 bp = Blueprint("klausuren", __name__, url_prefix="/klausuren")
 

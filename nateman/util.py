@@ -22,8 +22,6 @@ Enthält nützliche, von NateMan unabhängige Funktionen.
 import random
 import re
 
-from datetime import date
-
 EMAIL_ADDRESS_REGEX = re.compile(r"^[a-zA-Z0-9!#$%&‘*+–/=?^_`{|}~](\.?[a-zA-Z0-9!#$%&‘*+–/=?^_`{|}~])*"
                                  r"@[a-zA-Z0-9-](\.?[a-zA-Z0-9-])*$")
 

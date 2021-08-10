@@ -26,9 +26,8 @@ import sys
 from datetime import datetime
 
 import sqlalchemy
-from flask import abort, Flask, request, send_from_directory
+from flask import Flask
 from flask.logging import default_handler
-from werkzeug.utils import find_modules, import_string
 
 from . import util
 from .config_manager import config_file_exists, create_config_file, config

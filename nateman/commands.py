@@ -22,11 +22,9 @@ Enthält Befehle zur Verwendung im Terminal (Command Line Interface).
 import click
 from flask.cli import with_appcontext
 
-from nateman.exporter import excelexport
-from nateman.importer import excelimport, KoopSchuelerImportError
-from . import emails, util, assigner
-from .models import Lehrer, Stufe, db, Session
+from . import emails, util
 from .config_manager import config
+from .models import Lehrer, Stufe, db, Session
 
 
 @click.group()
