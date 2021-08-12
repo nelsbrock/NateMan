@@ -75,6 +75,8 @@ def create_app() -> Flask:
     db.init_app(app)
     db.create_all(app=app)
 
+    init_db(app)
+
     # Blueprints registrieren
     register_blueprints(app)
 
@@ -97,11 +99,9 @@ def load_config(app: Flask):
     Falls keine vorhanden ist, erstellt eine und beendet anschließend NateMan.
     """
     if not config_file_exists(app):
-        app.logger.critical("Die Konfigurationsdatei konnte nicht gefunden werden, erstellt eine neue...")
         config_path = create_config_file(app)
-        app.logger.critical(f"Da die Konfigurationsdatei nicht gefunden werden konnte, "
-                            f"wurde eine neue erstellt ({config_path}). NateMan wird nun beendet.")
-        sys.exit(1)
+        app.logger.info(f"Da die Konfigurationsdatei nicht gefunden werden konnte, "
+                        f"wurde eine neue erstellt ({config_path}).")
 
     # Konfigurationsdatei laden
     read_config_file(app)
@@ -146,6 +146,28 @@ def setup_syslog(app: Flask):
     file_formatter = logging.Formatter(fmt="nateman: [%(levelname)s] %(message)s")
     file_handler.setFormatter(file_formatter)
     app.logger.addHandler(file_handler)
+
+
+def init_db(app: Flask):
+    """ Initialisiert Stufen und Administratorkonto, falls nicht vorhanden """
+    app.app_context().push()
+    if Stufe.query.count() == 0:
+        new_stufen_namen = ["EF", "Q1", "Q2"]
+        for stufe_name in new_stufen_namen:
+            stufe = Stufe(name=stufe_name)
+            db.session.add(stufe)
+        app.logger.info(f"Da keine Stufen vorhanden waren, wurden neue erstellt ({', '.join(new_stufen_namen)}).")
+
+    if Lehrer.query.count() == 0:
+        new_lehrer_kuerzel = "admin"
+        new_lehrer_password = "admin"
+        lehrer = Lehrer(kuerzel="admin", is_admin=True, pwd_changed=False)
+        lehrer.set_password("admin", set_pwd_changed=False)
+        db.session.add(lehrer)
+        app.logger.info(f"Da keine Lehrerkonten vorhanden waren, wurde ein neues Administratorkonto erstellt. "
+                        f"(Kürzel: {new_lehrer_kuerzel}; Passwort: {new_lehrer_password})")
+
+    db.session.commit()
 
 
 def register_blueprints(app: Flask):

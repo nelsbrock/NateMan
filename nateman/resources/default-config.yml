@@ -2,7 +2,7 @@
 
 
 # Name, unter dem der Webserver normalerweise erreicht wird
-server-name: "nateman.example.com"
+server-name: "127.0.0.1:8080"
 
 # Benutzt der Webserver SSL (HTTPS)?
 uses-ssl: No
