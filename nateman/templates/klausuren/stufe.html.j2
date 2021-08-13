@@ -60,7 +60,10 @@
     {% endif %}
 
     {% for date in dates_list %}
-      {% set date_klausur_list = Klausur.query.filter_by(stufe=stufe, date=date).all() %}
+      {%
+        set date_klausur_list = Klausur.query.filter_by(stufe=stufe, date=date)
+        .order_by(Klausur.startperiod, Klausur.endperiod, Klausur.kursname).all()
+      %}
       {% set date_iso = date.strftime('%Y-%m-%d') %}
 
       <h3>
