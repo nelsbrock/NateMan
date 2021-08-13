@@ -75,7 +75,8 @@ def create_app() -> Flask:
     db.init_app(app)
     db.create_all(app=app)
 
-    init_db(app)
+    with app.app_context():
+        init_db(app)
 
     # Blueprints registrieren
     register_blueprints(app)
@@ -150,7 +151,6 @@ def setup_syslog(app: Flask):
 
 def init_db(app: Flask):
     """ Initialisiert Stufen und Administratorkonto, falls nicht vorhanden """
-    app.app_context().push()
     if Stufe.query.count() == 0:
         new_stufen_namen = ["EF", "Q1", "Q2"]
         for stufe_name in new_stufen_namen:
