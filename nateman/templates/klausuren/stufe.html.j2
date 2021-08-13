@@ -37,8 +37,8 @@
     keine
   {% else %}
     {% for l in beratungslehrer_list %}
-      {{ l.kuerzel }}{% if l.email is not none %} &lt;<a href="mailto:{{ l.email }}">{{ l.email }}</a>&gt;{% endif %}<!--
-      -->{% if not loop.last %},{% endif %}
+      {{ l.kuerzel }}{% if l.email is not none %} &lt;<a href="mailto:{{ l.email }}">{{ l.email }}</a>&gt;{% endif %}
+      {%- if not loop.last %},{% endif %}
     {% endfor %}
   {% endif %}
 </p>
