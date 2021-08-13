@@ -21,10 +21,10 @@ Informations-Blueprint
 
 from flask import Blueprint, render_template
 
-bp = Blueprint("info", __name__, url_prefix="/info")
+bp = Blueprint("info", __name__)
 
 
-@bp.route("/licenses")
-def licenses():
-    """ Lizenzen """
-    return render_template("info/licenses.html.j2")
+@bp.route("/about")
+def about():
+    """ Seite *Über* """
+    return render_template("info/about.html.j2")

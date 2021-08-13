@@ -1,6 +1,6 @@
 {#
   NateMan – Nachschreibtermin-Manager
-  templates/info/licenses.html.j2
+  templates/info/about.html.j2
   Copyright © 2020  Niklas Elsbrock
 
   This program is free software: you can redistribute it and/or modify
@@ -19,25 +19,32 @@
 
 {% extends 'base.html.j2' %}
 
-{% block title %}Lizenzen{% endblock %}
-{% block header %}Lizenzen{% endblock %}
+{% block title %}Über{% endblock %}
+{% block header %}Über{% endblock %}
 
 {% block content %}
 <h3><a href="https://github.com/nelsbrock/NateMan">NateMan</a></h3>
 <p>
-  &copy; 2020&ndash;2021 Niklas Elsbrock<br>
-  Excel-Exporter und Koop-Schüler-Importer: &copy; 2020 Johannes Bingel<br>
-  Lizensiert unter
+  Im Schuljahr 2019/2020 als <a href="https://de.wikipedia.org/wiki/Besondere_Lernleistung">Besondere Lernleistung</a>
+  entwickelt von:
+  <ul>
+    <li><a href="https://github.com/nelsbrock">Niklas Elsbrock</a> (Hauptentwickler)</li>
+    <li><a href="https://github.com/Hecht376">Johannes Bingel</a> (Exportfunktion und Excel-Importfunktion)</li>
+    <li>Dipl.-Inform. Christian Wolf, OStR (Idee und Betreuung)</li>
+  </ul>
+  Lizensiert unter der
   <a href="https://github.com/nelsbrock/NateMan/blob/main/LICENSE">GNU General Public License, Version 3</a>.
 </p>
 
-<h3>Schriftart: Lato</h3>
+<h3>Open-Source-Lizenzen</h3>
+
+<h4>Schriftart: Lato</h4>
 <p>
   Copyright (c) 2010-2015, Łukasz Dziedzic (dziedzic@typoland.com), with Reserved Font Name Lato.<br>
   Licensed under the <a href="https://scripts.sil.org/OFL">SIL Open Font License, Version 1.1</a>.
 </p>
 
-<h3>Symbole (Icons): Font Awesome Free</h3>
+<h4>Symbole (Icons): Font Awesome Free</h4>
 <p>
   Font Awesome Free 5.13.1 by @fontawesome - <a href="https://fontawesome.com">https://fontawesome.com</a><br>
   License - <a href="https://fontawesome.com/license/free">https://fontawesome.com/license/free</a>
