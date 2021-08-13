@@ -152,7 +152,7 @@
 
 <p class="description">
   {{ macros.zeitraum(klausur) }} Stunde;
-  {{ Klausurteilnahme.query.filter_by(klausur_id=klausur.id).count() }} Schüler
+  {{ Klausurteilnahme.query.filter_by(klausur_id=klausur.id).count() }} Schüler und Schülerinnen
 </p>
 
 <form method="post">
@@ -169,7 +169,7 @@
 
   {% if not no_edit %}
     <p>
-      Setzen Sie ein Häkchen bei allen Schülern, die die Klausur versäumt haben.<br>
+      Setzen Sie ein Häkchen bei allen Schülern und Schülerinnen, die die Klausur versäumt haben.<br>
       Klicken Sie zum Bestätigen auf 'Speichern'.
     </p>
   {% endif %}
@@ -182,7 +182,7 @@
       %}
         checked
       {% endif %}>
-      <b>kein</b> Schüler hat versäumt
+      <b>niemand</b> hat versäumt
     </label>
   </p>
   <p id="schueler-list">
@@ -228,10 +228,10 @@
 
   <form method="post">
     <input type="hidden" name="action" value="add-schueler">
-    <h3>Schüler hinzufügen:
+    <h3>Schüler/Schülerin hinzufügen:
       <select name="added-schueler" id="added-schueler" required>
         <option value="" selected disabled>Bitte auswählen</option>
-        <option value="new-schueler">Neuen Schüler hinzufügen...</option>
+        <option value="new-schueler">Neu anlegen...</option>
         {% for schueler in not_in_klausur_list %}
           <option value="{{ schueler.id }}">{{ schueler.nachname }}, {{ schueler.vorname }}
             ({{ schueler.id }}{% if schueler.koop %}, Koop{% endif %})
@@ -251,7 +251,7 @@
           <div><input type="text" name="new-schueler-vorname" id="new-schueler-vorname-input"></div>
         </div>
         <div>
-          <div><label for="new-schueler-koop-cb">Koop-Schüler:</label></div>
+          <div><label for="new-schueler-koop-cb">Koop:</label></div>
           <div><input type="checkbox" name="new-schueler-koop" id="new-schueler-koop-cb"></div>
         </div>
       </div>
