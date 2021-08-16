@@ -25,16 +25,16 @@
 {% block content %}
   <p>
     Folgende Klausuren müssen noch bearbeitet werden:
-    <ul>
-      {% for k in not_edited_list %}
-        <li>
-          <a href="{{ url_for('klausuren.edit', klausur_id=k.id, _external=True) }}">
-            {{ k.kursname }} ({{ macros.date(k.date) }}; {{ k.stufe.name }})
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
   </p>
+  <ul>
+    {% for k in not_edited_list %}
+      <li>
+        <a href="{{ url_for('klausuren.edit', klausur_id=k.id, _external=True) }}">
+          {{ k.kursname }} ({{ macros.date(k.date) }}; {{ k.stufe.name }})
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
 
   <p>
     Klicken Sie <a href="{{ url_for('klausuren.mine', _external=True) }}">hier</a>,
