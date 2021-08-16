@@ -66,10 +66,10 @@
       %}
       {% set date_iso = date.strftime('%Y-%m-%d') %}
 
-      <h3>
+      <h3 id="{{ date_iso }}">
         <span>
           {{ macros.date(date) }}:
-          <a class="scroll-anchor" name="{{ date_iso }}" href="#{{ date_iso }}"></a>
+          <a class="scroll-anchor" href="#{{ date_iso }}"></a>
         </span>
       </h3>
 
