@@ -119,7 +119,6 @@ def send_reminder_mails() -> int:
             .order_by(Klausur.date.desc()).all()
 
         if len(not_edited_list) == 0:
-            fail_count += 1
             continue
 
         if lehrer.email is None:
