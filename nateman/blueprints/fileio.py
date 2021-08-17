@@ -134,7 +134,7 @@ def import_():
 
                 current_app.logger.warning(f"Beim Versuch von {g.lehrer}, eine Koopschülerliste zu importieren, "
                                            f"ist ein Fehler aufgetreten.", exc_info=exc)
-            return redirect(url_for(".import"), code=303)
+                return redirect(url_for(".import"), code=303)
 
     if len(plan_given) == 0 and not ks_file_given:
         flash("Es wurden keine Pläne angegeben.", "error")
