@@ -54,7 +54,7 @@
 
 <body>
   <header>
-    <a id="nateman-logo-container" href="{{ url_for('klausuren.mine' if g.lehrer is not none else 'index.index') }}">
+    <a id="nateman-logo-container" href="{{ url_for('index.index') }}">
       <img id="nateman-logo" alt="NateMan Logo"
            src="{{ url_for('static', filename='img/logo.png') }}" draggable="false">
     </a>

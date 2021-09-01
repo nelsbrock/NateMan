@@ -30,6 +30,9 @@
     {%- if not loop.first -%}{%- if loop.last %} und {% else -%}, {% endif -%}{%- endif -%}
     <a href="{{ url_for('klausuren.stufe', stufe_name=stufe.name) }}">{{ stufe.name }}</a>
   {%- endfor %}
-  einsehen oder sich als Lehrer <a href="{{ url_for('auth.login') }}">anmelden</a>.
+  einsehen
+  {%- if g.lehrer is none %}
+    oder sich als Lehrer <a href="{{ url_for('auth.login') }}">anmelden</a>
+  {%- endif -%}.
 </p>
 {% endblock %}

@@ -19,15 +19,12 @@
 Index-Blueprint
 """
 
-from flask import Blueprint, g, redirect, url_for, render_template
+from flask import Blueprint, render_template
 
 bp = Blueprint("index", __name__)
 
 
 @bp.route("/")
 def index():
-    """ Startseite (Pfad ``/``, leitet bei angemeldetem Lehrer auf Klausurseite um) """
-    if g.lehrer is not None:
-        return redirect(url_for("klausuren.mine"), code=303)
-    else:
-        return render_template("index/index.html.j2")
+    """ Startseite (Pfad ``/``) """
+    return render_template("index/index.html.j2")
