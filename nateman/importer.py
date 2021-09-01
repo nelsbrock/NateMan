@@ -18,7 +18,8 @@
 """
 Enthält Funktionen zum Import von Daten.
 """
-
+import io
+import re
 from datetime import datetime
 from typing import TextIO, SupportsInt, Union
 
@@ -50,7 +51,111 @@ def _nbit_int(x: Union[str, bytes, SupportsInt], base=10, maxbits=32):
     return result
 
 
-def import_plan(xml_file: TextIO, stufe: Stufe, new_lehrer_pwd: str) -> None:
+def import_csv(file: TextIO, stufe: Stufe, new_lehrer_pwd: str) -> None:
+    """
+    Importiert eine Klausurliste aus der gegebenen CSV-Klausurplandatei für die angegebene Stufe.
+    Registriert noch nicht registrierte Lehrer mit dem angegebenen Passwort.
+    von Niklas Elsbrock
+
+    :param file: zu importierende XML-Datei
+    :param stufe: Stufe, für die der Plan importiert werden soll
+    :param new_lehrer_pwd: Passwort für neu registrierte Lehrerkonten
+    """
+    col_kursname = 0
+    col_lehrer_kuerzel = 1
+    col_date = 2
+    col_startperiod = 3
+    col_endperiod = 4
+    col_teilnehmer = 5
+
+    row_len = 6
+
+    delim_regex = r"[,;]"
+
+    assert util.validate_bcrypt_password(new_lehrer_pwd)
+
+    # Importdatum setzen
+    stufe.import_date = datetime.now().date()
+
+    new_lehrer_pwd_hash = bcrypt.hashpw(new_lehrer_pwd.encode("utf-8"), bcrypt.gensalt())
+
+    rows = [tuple(re.split(delim_regex, row)) for row in io.TextIOWrapper(file).read().splitlines()]
+
+    for rownum, row in enumerate(rows[1:], start=2):
+        if len(row) != row_len:
+            raise KlausurplanImportError(f"Zu importierender Plan für die Stufe {stufe.name} enthält in Zeile {rownum} "
+                                         f"nur {len(row)} statt der erwarteten {row_len} Werte.")
+
+        kursname = row[col_kursname]
+        lehrer_kuerzel = row[col_lehrer_kuerzel]
+        date = datetime.strptime(row[col_date], "%Y%m%d").date()
+        startperiod = _nbit_int(row[col_startperiod])
+        endperiod = _nbit_int(row[col_endperiod])
+
+        if startperiod < 0 or startperiod > endperiod:
+            raise KlausurplanImportError(f"Zu importierender Plan für die Stufe {stufe.name} enthält ungültigen "
+                                         f"Zeitraum (Zeile: {rownum}; VonStd: {startperiod} BisStd: {endperiod})")
+
+        # eventuell bereits registrierten Lehrer bekommen
+        kurs_lehrer_entity = Lehrer.query.filter_by(kuerzel=lehrer_kuerzel).first()
+
+        # Falls der Lehrer noch nicht registriert ist, registrieren
+        if kurs_lehrer_entity is None:
+            kurs_lehrer_entity = Lehrer(kuerzel=lehrer_kuerzel, is_confirmed=True, pwd_hash=new_lehrer_pwd_hash)
+            # Falls ein E-Mailadressenformat konfiguriert ist, dieses nutzen.
+            email_address_format = config.get("email-address-format", None)
+            if email_address_format is not None:
+                kurs_lehrer_entity.set_default_email_address(email_address_format)
+
+            db.session.add(kurs_lehrer_entity)
+
+        klausur_entity = Klausur(kursname=kursname, date=date, startperiod=startperiod, endperiod=endperiod,
+                                 stufe=stufe, lehrer=kurs_lehrer_entity)
+        db.session.add(klausur_entity)
+
+        for schueler_entry in row[col_teilnehmer].split('~'):
+            schueler_data = schueler_entry.rsplit('_', maxsplit=2)
+
+            if len(schueler_data) != 3:
+                schueler_entity = Schueler(id=get_next_new_schueler_id(), nachname=schueler_entry, vorname="???",
+                                           stufe=stufe, koop=True)
+            else:
+                (nachname, vorname, birthdate) = schueler_data
+                birthdate = int(birthdate)
+                for rownum in range(100):
+                    test_id = birthdate * 100 + rownum
+                    test_schueler = Schueler.query.filter_by(id=test_id).first()
+                    if test_schueler is None:
+                        schueler_entity = Schueler(id=test_id, nachname=nachname, vorname=vorname, stufe=stufe)
+                        break
+                    elif test_schueler.nachname == nachname and test_schueler.vorname == vorname:
+                        # Ist dieser Schüler bereits für eine andere Stufe eingetragen? -> Fehler
+                        if test_schueler.stufe != stufe:
+                            raise KlausurplanImportError(f"Zu importierender Plan für die {stufe.name} enthält Schüler "
+                                                         f"({vorname} {nachname}, {birthdate}), der bereits für die "
+                                                         f"{test_schueler.stufe.name} eingetragen ist "
+                                                         f"(Zeile: {rownum}).")
+                        schueler_entity = test_schueler
+                        break
+                else:
+                    raise KlausurplanImportError(f"Zu importierender Plan für Stufe {stufe.name} enthält Schüler "
+                                                 f"({vorname} {nachname}, {birthdate}; Zeile: {rownum}), dem keine ID "
+                                                 f"gegeben werden konnte.")
+
+            # Ist derselbe Schüler bereits in dieser Klausur? -> Fehler
+            if db.session.query(exists().where(and_(Klausurteilnahme.schueler == schueler_entity,
+                                                    Klausurteilnahme.klausur == klausur_entity))).scalar():
+                raise KlausurplanImportError(f"Zu importierender Plan für die {stufe.name} enthält selben "
+                                             f"Schüler ({schueler_entity.vorname} {schueler_entity.nachname}, "
+                                             f"{schueler_entity.birthdate}, Zeile: {rownum}) mehrfach in derselben "
+                                             f"Klausur ({kursname}).")
+
+            # Schüler zur Klausur hinzufügen
+            klausurteilnahme = Klausurteilnahme(klausur=klausur_entity, schueler=schueler_entity)
+            db.session.add(klausurteilnahme)
+
+
+def import_kurs42(xml_file: TextIO, stufe: Stufe, new_lehrer_pwd: str) -> None:
     """
     Importiert eine Klausurliste aus dem gegebenen XML-Klausurexport für die angegebene Stufe.
     Registriert noch nicht registrierte Lehrer mit dem angegebenen Passwort.
@@ -146,7 +251,7 @@ def import_plan(xml_file: TextIO, stufe: Stufe, new_lehrer_pwd: str) -> None:
 
 
 # Von Johannes
-def excelimport(filepath: str):
+def import_excel_koop(filepath: str):
     # Initialisiert Startdaten
     if Stufe.import_date is not None:
         workbook = load_workbook(filepath)

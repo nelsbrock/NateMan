@@ -54,7 +54,9 @@
     {% for stufe in stufen_list %}
       <div>
         <div><label for="plan_{{ stufe.name }}-input">Plan für {{ stufe.name }}:</label></div>
-        <div><input type="file" name="plan_{{ stufe.name }}" id="plan_{{ stufe.name }}-input" accept="text/xml"></div>
+        <div>
+          <input type="file" name="plan_{{ stufe.name }}" id="plan_{{ stufe.name }}-input" accept="text/csv,text/xml">
+        </div>
         <div>
           <input type="submit" name="del_{{ stufe.name }}" value="Plan löschen"
                  onclick="return confirm(plan_delete_warn)" {% if stufe.import_date is none %}disabled{% endif %}>

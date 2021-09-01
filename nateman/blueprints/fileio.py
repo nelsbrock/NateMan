@@ -28,7 +28,7 @@ from openpyxl.utils.exceptions import InvalidFileException
 
 from .auth import beratungslehrer_required, admin_required
 from .. import exporter, util
-from ..importer import KlausurplanImportError, import_plan, excelimport, KoopSchuelerImportError
+from ..importer import KlausurplanImportError, import_kurs42, import_excel_koop, KoopSchuelerImportError, import_csv
 from ..models import db, Stufe, Klausur, Schueler
 
 bp = Blueprint("fileio", __name__)
@@ -98,8 +98,13 @@ def import_():
 
             _del_plan(stufe)
 
+            if plan.filename.endswith(".xml"):
+                import_func = import_kurs42
+            else:
+                import_func = import_csv
+
             try:
-                import_plan(plan, stufe, new_lehrer_password)
+                import_func(plan, stufe, new_lehrer_password)
             except (KeyError, ValueError, ExpatError, KlausurplanImportError) as exc:
                 db.session.rollback()
 
@@ -125,7 +130,7 @@ def import_():
             ks_file.save(fp.name)
 
             try:
-                ks_import_failures = excelimport(fp.name)
+                ks_import_failures = import_excel_koop(fp.name)
             except (InvalidFileException, KoopSchuelerImportError) as exc:
                 db.session.rollback()
 
