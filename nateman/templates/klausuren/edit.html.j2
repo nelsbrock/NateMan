@@ -162,7 +162,7 @@
       Länge der Klausur:
       <input type="number" name="laenge" id="laenge-input" class="small" min="0" max="2147483647" autofocus
              {% if klausur.laenge is not none %} value="{{ klausur.laenge }}" {% endif %}
-             {% if not lehrer_can_access %} required {% endif %}>
+             {% if not lehrer_can_access %} required {% endif %} {% if no_edit %} disabled {% endif %}>
       Minuten
     </label>
   </p>
