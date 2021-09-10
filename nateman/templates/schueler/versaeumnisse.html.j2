@@ -47,23 +47,27 @@
         <table>
           <thead>
             <tr>
-              <th>Schüler/Schülerin</th>
-              <th>Klausurdatum</th>
+              <th rowspan="2" class="first-in-category">Schüler/Schülerin</th>
+              <th colspan="5" class="first-in-category">Klausur</th>
+              <th colspan="2" class="first-in-category">Status</th>
+            </tr>
+            <tr>
+              <th class="first-in-category">Datum</th>
               <th>Kurs</th>
               <th>Lehrkraft</th>
               <th>Länge</th>
               <th>Bemerkung</th>
-              <th>attestiert</th>
+              <th class="first-in-category">attestiert</th>
               <th>nachgeschrieben</th>
             </tr>
           </thead>
           <tbody>
             {% for kt in versaeumt_list %}
               <tr class="clickable" tabindex="0" data-href="{{ url_for('klausuren.edit', klausur_id=kt.klausur.id) }}">
-                <td>{{ kt.schueler.nachname }}, {{ kt.schueler.vorname }}
+                <td class="first-in-category">{{ kt.schueler.nachname }}, {{ kt.schueler.vorname }}
                   <span class="detail">({{ kt.schueler.id }}{% if kt.schueler.koop %}, Koop{% endif %})</span>
                 </td>
-                <td>{{ macros.date(kt.klausur.date) }}</td>
+                <td class="first-in-category">{{ macros.date(kt.klausur.date) }}</td>
                 <td>{{ kt.klausur.kursname }}</td>
                 <td>{{ kt.klausur.lehrer.kuerzel }}</td>
                 <td>{{ kt.klausur.laenge }}</td>
@@ -74,7 +78,7 @@
                   <td class="detail">keine</td>
                 {% endif %}
 
-                <td><input type="checkbox" name="a_{{ kt.klausur.id }}:{{ kt.schueler.id }}"
+                <td class="first-in-category"><input type="checkbox" name="a_{{ kt.klausur.id }}:{{ kt.schueler.id }}"
                            onclick="event.stopPropagation()" {% if kt.attestiert %}checked{% endif %}></td>
                 <td><input type="checkbox" name="n_{{ kt.klausur.id }}:{{ kt.schueler.id }}"
                            onclick="event.stopPropagation()" {% if kt.nachgeschrieben %}checked{% endif %}></td>

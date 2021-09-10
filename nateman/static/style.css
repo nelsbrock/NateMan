@@ -351,14 +351,26 @@ table tbody tr:nth-child(even) {
 
 table th,
 table td {
-  border-top: 1px solid var(--fg-main);
-  border-right: 1px dotted var(--fg-main);
-  border-bottom: 1px solid var(--fg-main);
-  border-left: 1px dotted var(--fg-main);
   padding: 4px 6px;
 }
 
 table th {
+  border: 1px dotted var(--fg-main);
+}
+
+table td {
+  border-top: 1px solid var(--fg-main);
+  border-right: 1px dotted var(--fg-main);
+  border-bottom: 1px solid var(--fg-main);
+  border-left: 1px dotted var(--fg-main);
+}
+
+table td.first-in-category,
+table th.first-in-category {
+  border-left: 1px solid var(--fg-main);
+}
+
+table thead {
   background-color: var(--bg-tertiary);
   border-bottom: 2px solid var(--fg-main);
 }
