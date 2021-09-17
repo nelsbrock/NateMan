@@ -65,7 +65,6 @@ def _send_mail(name: str, address: str, subject: str, content: str, content_type
 
     msg = MIMEText(content, content_type, content_charset)
     msg["From"] = f"NateMan <{sender_address}>"
-    msg["To"] = f"{name} <{address}>"
     msg["Subject"] = subject
 
     smtp_param = smtp is not None
