@@ -43,6 +43,29 @@ def mine():
                            klausuren_vergangen=klausuren_vergangen)
 
 
+@bp.route("/schueler", endpoint="schueler")
+def schueler_():
+    schueler_id = request.args.get("id")
+    schueler_nachname = request.args.get("nachname")
+    if schueler_id is None or schueler_nachname is None:
+        flash("Fehlende Schülerdaten.", "error")
+        return redirect(url_for("index.index"), code=303)
+    schueler = Schueler.query.filter_by(id=schueler_id, nachname=schueler_nachname).first()
+    if schueler is None:
+        flash("Ungültige Schülerdaten.", "error")
+        return redirect(url_for("index.index"), code=303)
+
+    kt_query = Klausurteilnahme.query.join(Schueler).join(Klausur) \
+        .filter(Schueler.id == schueler_id) \
+        .order_by(Klausur.date)
+
+    kt_anstehend = kt_query.filter(Klausur.date > datetime.now().date()).all()
+    kt_vergangen = kt_query.filter(Klausur.date <= datetime.now().date()).all()
+
+    return render_template("klausuren/schueler.html.j2", schueler=schueler, kt_vergangen=kt_vergangen,
+                           kt_anstehend=kt_anstehend)
+
+
 @bp.route("/<stufe_name>/", endpoint="stufe")
 def stufe_(stufe_name):
     """ Ansicht der Klausuren einer Stufe (Seite *Klausuren [Stufe]*) """

@@ -1,0 +1,68 @@
+{#
+  NateMan – Nachschreibtermin-Manager
+  templates/klausuren/schueler.html.j2
+  Copyright © 2021  Niklas Elsbrock
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-#}
+
+{% extends 'base.html.j2' %}
+
+{% macro kt_table(kt_list) %}
+  {% if kt_list|length == 0 %}
+    <p>keine</p>
+  {% else %}
+    <table>
+      <thead>
+        <tr>
+          <th>Datum</th>
+          <th>Lehrkraft</th>
+          <th>Kurs</th>
+          <th>Zeitraum</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for kt in kt_list %}
+          <tr>
+            <td>{{ macros.date(kt.klausur.date) }}</td>
+            <td>{{ kt.klausur.lehrer.kuerzel }}</td>
+            <td>{{ kt.klausur.kursname }}</td>
+            <td>{{ macros.zeitraum(kt.klausur) }} Std.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+{% endmacro %}
+
+{% block title %}
+  Klausurplan für {{ schueler.vorname }} {{ schueler.nachname }} ({{ schueler.stufe.name }})
+{% endblock %}
+{% block header %}
+  Klausurplan für {{ schueler.vorname }} {{ schueler.nachname }} ({{ schueler.stufe.name }})
+{% endblock %}
+
+{# schueler #}
+{# kt_vergangen #}
+{# kt_anstehend #}
+
+{% block content %}
+
+<h3>vergangen:</h3>
+{{ kt_table(kt_vergangen) }}
+
+<h3>anstehend:</h3>
+{{ kt_table(kt_anstehend) }}
+
+{% endblock %}

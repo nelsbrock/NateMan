@@ -12,6 +12,7 @@ NateMan (**Na**chschreib**te**rmin-**Man**ager) ist eine Webanwendung zur Koordi
 * Excel-Export von Nachschreibplänen mit automatischer Terminzuordnung
 * Klausurerinnerungen an Lehrkräfte per E-Mail
 * öffentlich einsehbare Klausurpläne
+* individuelle Klausurplanansicht für Schüler und Schülerinnen
 
 ## Schnelle Installation
 
@@ -20,7 +21,7 @@ NateMan (**Na**chschreib**te**rmin-**Man**ager) ist eine Webanwendung zur Koordi
 1. Installieren Sie [Python](https://www.python.org/downloads/) und [Python-Venv](https://docs.python.org/3/library/venv.html).
     <details>
       <summary>Details</summary>
-  
+
       Unter Linux (Debian und Derivate) installieren Sie die Pakete `python3` und `python3-venv`.\
       Unter Windows und macOS laden Sie den [Python-Installer](https://www.python.org/downloads/) herunter und führen Sie ihn aus. Python-Venv wird standardmäßig mitinstalliert.
     </details>
@@ -35,7 +36,7 @@ NateMan (**Na**chschreib**te**rmin-**Man**ager) ist eine Webanwendung zur Koordi
       python3 -m venv venv
       source venv/bin/activate
       ```
-   
+
       **Windows:**
       ```dos
       mkdir nateman

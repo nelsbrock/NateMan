@@ -35,4 +35,23 @@
     oder sich als Lehrer <a href="{{ url_for('auth.login') }}">anmelden</a>
   {%- endif -%}.
 </p>
+
+<hr>
+
+<h3>Klausurpläne für Schüler und Schülerinnen</h3>
+<form action="{{ url_for('klausuren.schueler') }}" method="get">
+  <div class="table-aligned">
+    <div>
+      <div><label for="id-input">Schüler-ID:</label></div>
+      <div><input type="number" name="id" id="id-input" required autofocus></div>
+    </div>
+    <div>
+      <div><label for="nachname-input">Nachname:</label></div>
+      <div><input type="text" name="nachname" id="nachname-input" autocomplete="family-name" required></div>
+    </div>
+  </div>
+  <p>
+    <input type="submit" value="Klausurplan ansehen">
+  </p>
+</form>
 {% endblock %}
