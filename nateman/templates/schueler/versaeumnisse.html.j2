@@ -23,17 +23,17 @@
 {% block header %}Versäumnisse{% endblock %}
 
 {#
-  versaeumt_dict: Dictinonary mit jeweils eimem Tupel aus zwei Listen aller nicht nachgeschriebenen bzw.
-                  nachgeschriebenen versäumten Klausurteilnahmen pro Stufe, auf die der angemeldete Lehrer Zugriff hat
+  klausur_dict: Dictinonary mit jeweils eimem Tupel aus zwei Listen aller Klausuren mit nicht nachgeschriebenen bzw.
+                nachgeschriebenen versäumten Klausurteilnahmen pro Stufe, auf die der angemeldete Lehrer Zugriff hat
 #}
 
 {% block content %}
 
 <form method="post">
-  {% for stufe, versaeumt_listen in versaeumt_dict.items() %}
+  {% for stufe, klausur_listen in klausur_dict.items() %}
     <h3>{{ stufe.name }}</h3>
 
-    {% for versaeumt_list in versaeumt_listen %}
+    {% for klausur_list in klausur_listen %}
       <h4>
         {% if loop.first %}
           noch nicht nachgeschrieben:
@@ -41,18 +41,19 @@
           bereits nachgeschrieben:
         {% endif %}
       </h4>
-      {% if versaeumt_list|length == 0 %}
+      {% if klausur_list|length == 0 %}
         <p>keine</p>
       {% else %}
         <table>
           <thead>
             <tr>
+              <th colspan="6" class="first-in-category">Klausur</th>
               <th rowspan="2" class="first-in-category">Schüler/Schülerin</th>
-              <th colspan="5" class="first-in-category">Klausur</th>
               <th colspan="2" class="first-in-category">Status</th>
             </tr>
             <tr>
-              <th class="first-in-category">Datum</th>
+              <th class="first-in-category">ID</th>
+              <th>Datum</th>
               <th>Kurs</th>
               <th>Lehrkraft</th>
               <th>Länge</th>
@@ -61,28 +62,43 @@
               <th>nachgeschrieben</th>
             </tr>
           </thead>
+
           <tbody>
-            {% for kt in versaeumt_list %}
-              <tr class="clickable" tabindex="0" data-href="{{ url_for('klausuren.edit', klausur_id=kt.klausur.id) }}">
-                <td class="first-in-category">{{ kt.schueler.nachname }}, {{ kt.schueler.vorname }}
-                  <span class="detail">({{ kt.schueler.id }}{% if kt.schueler.koop %}, Koop{% endif %})</span>
-                </td>
-                <td class="first-in-category">{{ macros.date(kt.klausur.date) }}</td>
-                <td>{{ kt.klausur.kursname }}</td>
-                <td>{{ kt.klausur.lehrer.kuerzel }}</td>
-                <td>{{ kt.klausur.laenge }}</td>
+            {% for klausur in klausur_list %}
+              {% set kt_list = Klausurteilnahme.query.filter_by(klausur=klausur, versaeumt=true).all() %}
+              {% for kt in kt_list %}
+                <tr>
+                  {% if loop.first %}
+                    <td rowspan="{{ kt_list|length }}" class="first-in-category">
+                      <a href="{{ url_for('klausuren.edit', klausur_id=klausur.id) }}">
+                        {{ klausur.id }}
+                      </a>
+                    </td>
+                    <td rowspan="{{ kt_list|length }}">{{ macros.date(klausur.date) }}</td>
+                    <td rowspan="{{ kt_list|length }}">{{ klausur.kursname }}</td>
+                    <td rowspan="{{ kt_list|length }}">{{ klausur.lehrer.kuerzel }}</td>
+                    <td rowspan="{{ kt_list|length }}">{{ klausur.laenge }}</td>
+                    {% if kt.klausur.annotation is not none %}
+                      <td rowspan="{{ kt_list|length }}" class="description">{{ kt.klausur.annotation }}</td>
+                    {% else %}
+                      <td rowspan="{{ kt_list|length }}" class="detail">keine</td>
+                    {% endif %}
+                  {% endif %}
 
-                {% if kt.klausur.annotation is not none %}
-                  <td class="description">{{ kt.klausur.annotation }}</td>
-                {% else %}
-                  <td class="detail">keine</td>
-                {% endif %}
-
-                <td class="first-in-category"><input type="checkbox" name="a_{{ kt.klausur.id }}:{{ kt.schueler.id }}"
-                           onclick="event.stopPropagation()" {% if kt.attestiert %}checked{% endif %}></td>
-                <td><input type="checkbox" name="n_{{ kt.klausur.id }}:{{ kt.schueler.id }}"
-                           onclick="event.stopPropagation()" {% if kt.nachgeschrieben %}checked{% endif %}></td>
-              </tr>
+                  <td class="first-in-category">
+                    {{ kt.schueler.nachname }}, {{ kt.schueler.vorname }}
+                    <span class="detail">({{ kt.schueler.id }}{% if kt.schueler.koop %}, Koop{% endif %})</span>
+                  </td>
+                  <td class="first-in-category">
+                    <input type="checkbox" name="a_{{ kt.klausur.id }}:{{ kt.schueler.id }}"
+                           {% if kt.attestiert %}checked{% endif %}>
+                  </td>
+                  <td>
+                    <input type="checkbox" name="n_{{ kt.klausur.id }}:{{ kt.schueler.id }}"
+                           {% if kt.nachgeschrieben %}checked{% endif %}>
+                  </td>
+                </tr>
+              {% endfor %}
             {% endfor %}
           </tbody>
         </table>

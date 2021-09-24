@@ -33,19 +33,20 @@ bp = Blueprint("schueler", __name__, url_prefix="/schueler")
 def versaeumnisse():
     """ Versäumnisliste (Seite *Versäumnisse*) """
     if request.method != "POST":
-        versaeumt_dict: Dict[Stufe, Tuple[List[Klausurteilnahme], List[Klausurteilnahme]]] = {}
+        klausur_dict: Dict[Stufe, Tuple[List[Klausurteilnahme], List[Klausurteilnahme]]] = {}
         for stufe in g.lehrer.accessible_stufen():
-            base_query = Klausurteilnahme.query.join(Schueler).join(Klausur) \
+            base_query = Klausur.query.join(Klausurteilnahme) \
                 .filter(Klausurteilnahme.versaeumt) \
                 .filter(Klausur.stufe == stufe) \
-                .order_by(Schueler.nachname, Schueler.vorname)
+                .group_by(Klausur) \
+                .order_by(Klausur.date)
 
-            versaeumt_dict[stufe] = (
+            klausur_dict[stufe] = (
                 base_query.filter(~Klausurteilnahme.nachgeschrieben).all(),
                 base_query.filter(Klausurteilnahme.nachgeschrieben).all(),
             )
 
-        return render_template("schueler/versaeumnisse.html.j2", versaeumt_dict=versaeumt_dict)
+        return render_template("schueler/versaeumnisse.html.j2", klausur_dict=klausur_dict)
 
     # ELSE
 
