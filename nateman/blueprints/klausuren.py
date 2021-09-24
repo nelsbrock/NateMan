@@ -34,7 +34,7 @@ bp = Blueprint("klausuren", __name__, url_prefix="/klausuren")
 @login_required
 def mine():
     """ Ansicht der eigenen Klausuren (Seite *Meine Klausuren*) """
-    klausur_query = Klausur.query.filter(Klausur.lehrer == g.lehrer).order_by(Klausur.date.desc())
+    klausur_query = Klausur.query.filter(Klausur.lehrer == g.lehrer).order_by(Klausur.date)
 
     klausuren_anstehend = klausur_query.filter(Klausur.date > datetime.now().date()).all()
     klausuren_vergangen = klausur_query.filter(Klausur.date <= datetime.now().date()).all()
@@ -74,12 +74,23 @@ def stufe_(stufe_name):
         abort(404)
         return
 
-    dates_query = db.session.query(Klausur.date).filter_by(stufe=stufe).order_by(Klausur.date.desc())
-    dates_anstehend = [t.date for t in dates_query.filter(Klausur.date > datetime.now().date()).distinct()]
-    dates_vergangen = [t.date for t in dates_query.filter(Klausur.date <= datetime.now().date()).distinct()]
+    desc_order = request.args.get("order") == "desc"
+    if desc_order:
+        order = Klausur.date.desc()
+    else:
+        order = Klausur.date.asc()
+
+    dates_query = db.session.query(Klausur.date).filter_by(stufe=stufe).order_by(order)
+    dates_anstehend = [t.date for t in dates_query.filter(
+        (Klausur.date > datetime.now().date()) if desc_order else (Klausur.date >= datetime.now().date())
+    ).distinct()]
+
+    dates_vergangen = [t.date for t in dates_query.filter(
+        (Klausur.date <= datetime.now().date()) if desc_order else (Klausur.date < datetime.now().date())
+    ).distinct()]
 
     return render_template("klausuren/stufe.html.j2", stufe=stufe, dates_anstehend=dates_anstehend,
-                           dates_vergangen=dates_vergangen)
+                           dates_vergangen=dates_vergangen, desc_order=desc_order)
 
 
 @bp.route("/<stufe_name>/add", methods=("GET", "POST"))

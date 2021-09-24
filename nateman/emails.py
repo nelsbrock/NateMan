@@ -115,7 +115,7 @@ def send_reminder_mails() -> int:
     for lehrer in Lehrer.query.all():
         not_edited_list = Klausur.query \
             .filter(and_(Klausur.date <= datetime.now().date(), Klausur.lehrer == lehrer, ~Klausur.edited)) \
-            .order_by(Klausur.date.desc()).all()
+            .order_by(Klausur.date).all()
 
         if len(not_edited_list) == 0:
             continue

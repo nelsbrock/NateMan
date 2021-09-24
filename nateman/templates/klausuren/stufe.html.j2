@@ -25,6 +25,7 @@
 {# stufe #}
 {# dates_anstehend #}
 {# dates_vergangen #}
+{# desc_order #}
 {% set lehrer_can_access = g.lehrer is not none and g.lehrer.can_access(stufe) %}
 {% set klausur_count = dates_anstehend | length + dates_vergangen | length %}
 {% set beratungslehrer_list = Lehrer.query.filter_by(beraet=stufe).all() %}
@@ -48,13 +49,23 @@
 {% endif %}
 
 {% if klausur_count != 0 %}
-  <p><a href="#heute" data-icon="&#xf103;">zu heute springen</a></p>
+  <p>
+    <a href="#heute" data-icon="&#xf103;">zu heute springen</a>
+    &middot;
+    {% if desc_order %}
+      <a href="{{ url_for('klausuren.stufe', stufe_name=stufe.name) }}" data-icon="&#xf162;">aufsteigend sortieren</a>
+    {% else %}
+      <a href="{{ url_for('klausuren.stufe', stufe_name=stufe.name, order='desc') }}" data-icon="&#xf886;">{#
+        #}absteigend sortieren
+      </a>
+    {% endif %}
+  </p>
 {% endif %}
 
 {% if klausur_count == 0 %}
   <p>keine</p>
 {% else %}
-  {% for dates_list in (dates_anstehend, dates_vergangen) %}
+  {% for dates_list in ((dates_anstehend, dates_vergangen) if desc_order else (dates_vergangen, dates_anstehend)) %}
     {% if loop.index0 == 1 %}
       <div id="heute" class="labeled-hr" data-icon="&#xf073;">heute ({{ macros.date(datetime.now()) }})</div>
     {% endif %}
