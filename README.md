@@ -54,7 +54,7 @@ NateMan (**Na**chschreib**te**rmin-**Man**ager) ist eine Webanwendung zur Koordi
     ```shell
     python3 -m nateman
     ```
-Öffnen Sie nun den frisch installierten NateMan unter <http://localhost:8080/> und melden Sie sich mit dem Kürzel `admin` und dem Passwort `admin` an.
+Öffnen Sie nun den frisch installierten NateMan unter <http://127.0.0.1:8080/> und melden Sie sich mit dem Kürzel `admin` und dem Passwort `admin` an.
 
 ## Über die Entwicklung
 
