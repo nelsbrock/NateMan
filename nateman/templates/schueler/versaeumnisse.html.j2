@@ -91,11 +91,11 @@
                   </td>
                   <td class="first-in-category">
                     <input type="checkbox" name="a_{{ kt.klausur.id }}:{{ kt.schueler.id }}"
-                           {% if kt.attestiert %}checked{% endif %}>
+                           aria-label="attestiert" {% if kt.attestiert %}checked{% endif %}>
                   </td>
                   <td>
                     <input type="checkbox" name="n_{{ kt.klausur.id }}:{{ kt.schueler.id }}"
-                           {% if kt.nachgeschrieben %}checked{% endif %}>
+                           aria-label="nachgeschrieben" {% if kt.nachgeschrieben %}checked{% endif %}>
                   </td>
                 </tr>
               {% endfor %}

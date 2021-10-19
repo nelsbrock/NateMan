@@ -293,11 +293,11 @@
         <div>
           <div>Klausurzeitraum:</div>
           <div>
-            <input type="number" name="new-startperiod" id="new-startperiod-input" class="small" min="0"
-                   max="2147483647" value="{{ klausur.startperiod }}" required>{#
+            <input type="number" name="new-startperiod" id="new-startperiod-input" aria-label="erste Stunde"
+                   class="small" min="0" max="2147483647" value="{{ klausur.startperiod }}" required>{#
             #}. bis
-            <input type="number" name="new-endperiod" id="new-endperiod-input" class="small" min="0" max="2147483647"
-                   value="{{ klausur.endperiod }}" required>{#
+            <input type="number" name="new-endperiod" id="new-endperiod-input" class="small" aria-label="letzte Stunde"
+                   min="0" max="2147483647" value="{{ klausur.endperiod }}" required>{#
             #}. Stunde
           </div>
         </div>
