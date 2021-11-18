@@ -161,8 +161,8 @@ def init_db(app: Flask):
     if Lehrer.query.count() == 0:
         new_lehrer_kuerzel = "admin"
         new_lehrer_password = "admin"
-        lehrer = Lehrer(kuerzel="admin", is_admin=True, pwd_changed=False)
-        lehrer.set_password("admin", set_pwd_changed=False)
+        lehrer = Lehrer(kuerzel=new_lehrer_kuerzel, is_admin=True, pwd_changed=False)
+        lehrer.set_password(new_lehrer_password, set_pwd_changed=False)
         db.session.add(lehrer)
         app.logger.info(f"Da keine Lehrerkonten vorhanden waren, wurde ein neues Administratorkonto erstellt. "
                         f"(Kürzel: {new_lehrer_kuerzel}; Passwort: {new_lehrer_password})")
