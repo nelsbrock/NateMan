@@ -5,7 +5,7 @@ NateMan (**Na**chschreib**te**rmin-**Man**ager) ist eine Webanwendung zur Koordi
 ![Klausurliste in NateMan](./screenshots/klausurliste.png)
 
 ## Funktionen
-* Import und Bearbeitung von Klausurlisten (aus Kurs42, bald auch UNTIS)
+* Import und Bearbeitung von Klausurlisten (aus einem CSV-Format oder Kurs42)
 * administrierbares Anmeldesystem für Lehrkräfte
 * Eintragung von Klausurversäumnissen und Attesten
 * Versäumnislisten für Beratungslehrer
