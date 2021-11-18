@@ -337,15 +337,15 @@ table tr.clickable {
 
 table tr.clickable:hover,
 table tr.clickable:focus {
-  background-color: var(--bg-tertiary);
+  background-color: var(--bg-tertiary) !important;
   outline: none;
 }
 
-table tbody tr:nth-child(odd) {
+table tbody tr:nth-child(odd), table.nopattern tbody tr {
   background-color: var(--bg-primary);
 }
 
-table tbody tr:nth-child(even) {
+table:not(.nopattern) tbody tr:nth-child(even), table tbody tr.explicit-pattern {
   background-color: var(--bg-secondary);
 }
 

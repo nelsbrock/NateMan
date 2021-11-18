@@ -45,7 +45,7 @@
       {% if klausur_list|length == 0 %}
         <p>keine</p>
       {% else %}
-        <table>
+        <table class="nopattern">
           <thead>
             <tr>
               <th colspan="6" class="first-in-category">Klausur</th>
@@ -68,8 +68,9 @@
             {% for klausur in klausur_list %}
               {% set kt_list = Klausurteilnahme.query
                   .filter_by(klausur=klausur, versaeumt=true, nachgeschrieben=nachgeschrieben).all() %}
+              {% set klausur_index = loop.index %}
               {% for kt in kt_list %}
-                <tr>
+                <tr {% if klausur_index is divisibleby 2 %}class="explicit-pattern"{% endif %}>
                   {% if loop.first %}
                     <td rowspan="{{ kt_list|length }}" class="first-in-category">
                       <a href="{{ url_for('klausuren.edit', klausur_id=klausur.id) }}">
