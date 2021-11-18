@@ -97,7 +97,7 @@ def setup_logging(app: Flask):
 def load_config(app: Flask):
     """
     Liest die Konfigurationsdatei.
-    Falls keine vorhanden ist, erstellt eine und beendet anschließend NateMan.
+    Falls keine vorhanden ist, wird vorher eine erstellt.
     """
     if not config_file_exists(app):
         config_path = create_config_file(app)
