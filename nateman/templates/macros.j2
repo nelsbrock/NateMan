@@ -29,3 +29,7 @@
     &ndash;{{ klausur.endperiod }}.
   {%- endif %}
 {%- endmacro %}
+
+{% macro klausur_name(klausur, time_tag=true) -%}
+  {{ klausur.kursname }} ({{ date(klausur.date, time_tag) }}; {{ klausur.lehrer.kuerzel }}, {{ klausur.stufe.name }})
+{%- endmacro %}
