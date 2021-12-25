@@ -179,7 +179,9 @@ def login():
 
     current_app.logger.info(f"{lehrer} hat sich angemeldet.")
 
-    session_expiry_delta = timedelta(days=12) if remember_me else timedelta(hours=1)
+    session_expiry_delta = timedelta(
+        minutes=(config["auth"]["session-remember-me-duration"] if remember_me else config["auth"]["session-duration"])
+    )
     session = Session.create(lehrer, session_expiry_delta)
 
     if not lehrer.pwd_changed:

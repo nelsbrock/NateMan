@@ -17,6 +17,14 @@ default-new-lehrer-password: ""
 #email-address-format: ""
 
 
+auth:
+  # Maximale Anmeldesitzungslänge in Minuten
+  session-duration: 60
+  # Maximale Anmeldesitzungslänge mit aktiviertem "Angemeldet bleiben" in Minuten
+  # Voreinstellung: (90 * 24 * 60) Minuten = 90 Tage
+  session-remember-me-duration: 129600
+
+
 schule:
   # Name der Schule
   name: "Max-Mustermann-Schule"
