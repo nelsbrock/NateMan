@@ -75,11 +75,10 @@ def _send_mail(name: str, address: str, subject: str, content: str, content_type
     logger.debug(f"E-Mail wird an {address} versandt...")
     try:
         smtp.sendmail(sender_address, address, msg.as_string())
-    except smtplib.SMTPRecipientsRefused as exc:
+    except smtplib.SMTPException as exc:
         if not smtp_param:
             smtp.close()
-        logger.debug(f"E-Mail an {address} konnte nicht versandt werden "
-                     f"(wahrscheinlich ungültige Adresse).", exc_info=exc)
+        logger.debug(f"E-Mail an {address} konnte nicht versandt werden, da ein Fehler aufgetreten ist.", exc_info=exc)
         raise
     else:
         logger.debug(f"E-Mail an {address} erfolgreich versandt.")
@@ -136,9 +135,10 @@ def send_reminder_mails() -> int:
         content = render_template("email/reminder.html.j2", not_edited_list=not_edited_list)
         try:
             _send_mail(lehrer.kuerzel, lehrer.email, "NateMan: zur Erinnerung", content, smtp=smtp)
-        except smtplib.SMTPRecipientsRefused as exc:
-            logger.info(f"Erinnerungsemail an {lehrer} mit der Adresse {lehrer.email} konnte nicht versandt werden "
-                        f"(wahrscheinlich ungültige Adresse).", exc_info=exc)
+        except smtplib.SMTPException as exc:
+            logger.info(f"Erinnerungsemail an {lehrer} mit der Adresse {lehrer.email} konnte nicht versandt werden, "
+                        f"da ein Fahler aufgetreten ist.",
+                        exc_info=exc)
         else:
             logger.info(f"Erinnerungsemail an {lehrer} erfolgreich versandt.")
 
