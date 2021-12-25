@@ -7,7 +7,7 @@ server-name: "127.0.0.1:8080"
 # Benutzt der Webserver SSL (HTTPS)?
 uses-ssl: No
 
-# Passwort, das standardmäßig als Passwort für neu reistrierte Lehrer verwendet wird
+# Passwort, das standardmäßig als Passwort für neu registrierte Lehrer verwendet wird
 default-new-lehrer-password: ""
 
 # Format für E-Mail-Adressen neu hinzugefügter Lehrer.
@@ -54,7 +54,7 @@ logging:
 
 # Mailserver-Einstellungen
 mail:
-  # Addresse, von der von NateMan automatisch gesendete E-Mails ausgehen
+  # Adresse, von der von NateMan automatisch gesendete E-Mails ausgehen
   sender-address: "nateman@example.com"
   # Legt, ob SSL zur Verbindung zum SMTP-Server verwendet werden soll.
   # Empfohlen, falls der SMTP-Server dies unterstützt.
