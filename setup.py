@@ -7,7 +7,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="NateMan",
-    version="1.2.0",
+    version="1.3.0",
     author="Niklas Elsbrock, Johannes Bingel",
     packages=find_packages(),
     include_package_data=True,
