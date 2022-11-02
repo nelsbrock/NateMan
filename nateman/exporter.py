@@ -20,7 +20,7 @@ from typing import Iterable, Optional
 from openpyxl import Workbook
 from openpyxl.styles import Font
 
-from nateman import assigner
+from . import assigner
 from .models import Klausur, Klausurteilnahme, Schueler, Stufe
 
 
