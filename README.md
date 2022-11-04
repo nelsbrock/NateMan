@@ -18,7 +18,7 @@ NateMan (**Na**chschreib**te**rmin-**Man**ager) ist eine Webanwendung zur Koordi
 
 *Die schnelle Installation ist nur zum Ausprobieren geeignet und sollte nicht produktiv eingesetzt werden!*
 
-Dieser Abschnitt beschreibt die manuelle Installation von NateMan. Zur Installation mit Docker steht ein [Dockerfile](/Dockerfile) zur Verfügung.
+Dieser Abschnitt beschreibt die manuelle Installation von NateMan. Zur Installation mit Docker steht ein [Dockerfile](./Dockerfile) zur Verfügung.
 
 1. Installieren Sie [Python](https://www.python.org/downloads/) und [Python-Venv](https://docs.python.org/3/library/venv.html).
     <details>
