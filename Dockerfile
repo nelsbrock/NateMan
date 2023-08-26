@@ -1,4 +1,4 @@
-FROM alpine:3.17
+FROM alpine:3.18
 
 MAINTAINER Niklas Elsbrock
 
@@ -11,9 +11,6 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repos
         py3-yaml \
         py3-bcrypt \
         py3-openpyxl \
-    # Dirty compatibility workaround: Due to `py3-flask-sqlalchemy` originating from the Alpine testing repository
-    # and therefore being built for a newer version of python, we need to move its files from python3.11 to python3.10.
-    && mv /usr/lib/python3.11/site-packages/* /usr/lib/python3.10/site-packages/ \
     && mkdir -p /srv/nateman/app
 
 COPY nateman /srv/nateman/app
