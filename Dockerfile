@@ -2,7 +2,7 @@ FROM alpine:3.18
 
 MAINTAINER Niklas Elsbrock
 
-RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repositories \
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories \
     && apk add --no-cache \
         python3 \
         py3-flask \
