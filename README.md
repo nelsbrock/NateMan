@@ -1,5 +1,7 @@
 # NateMan
 
+*Hinweis: NateMan ist als Schulprojekt für das Abitur („[Besondere Lernleistung](https://de.wikipedia.org/wiki/Besondere_Lernleistung)“) entstanden. Es wird von mir seit 2022 nur noch minimal auf dem neuesten Stand gehalten (z.B. bezüglich des Dockerfiles) und nicht mehr weiterentwickelt. Benutzung auf eigene Gefahr. 😉*
+
 NateMan (**Na**chschreib**te**rmin-**Man**ager) ist eine Webanwendung zur Koordination von Klausuren gymnasialer Oberstufen. Klausurpläne können aus verschiedenen Formaten importiert oder direkt im Webinterface erstellt werden und sind anschließend öffentlich einsehbar. Über eigene Lehrerkonten können Klausuraufsichten nach einer Klausur Versäumnisse eintragen. Beratungslehrer und Oberstufenkoordinatoren können diese Bearbeitungen einsehen, bei Bedarf ändern und Atteste für Versäumnisse eintragen.
 
 ![Klausurliste in NateMan](./screenshots/klausurliste.png)
