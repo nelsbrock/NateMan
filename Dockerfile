@@ -1,9 +1,8 @@
-FROM alpine:3.18
+FROM alpine:3.19
 
 MAINTAINER Niklas Elsbrock
 
-RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories \
-    && apk add --no-cache \
+RUN apk add --no-cache \
         python3 \
         py3-flask \
         py3-flask-sqlalchemy \
